@@ -1,7 +1,7 @@
 export default abstract class HasId{
-    id: Symbol;
+    id: number;
 
-    constructor(props: {id: Symbol}) {
+    constructor(props: {id: number}) {
         this.id = props.id;
     }
 }

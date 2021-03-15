@@ -13,7 +13,7 @@ export default abstract class HasResults extends HasDrivers{
     }
     private _results: Result[] = [];
 
-    findResultByDriverId(driverId: Symbol): Result{
+    findResultByDriverId(driverId: number): Result{
         return this.results.find((result) => result.driver.id === driverId);
     }
 
