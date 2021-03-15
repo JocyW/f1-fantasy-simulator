@@ -1,9 +1,9 @@
 import FinishGenerator from "../../interfaces/FinishGenerator";
-import Finishable from "../higher/Finishable";
+import HasResults from "../higher/HasResults";
 import Result from "../Result";
 
 export default class BasedOnCostGenerator implements FinishGenerator{
-    generate(finishable: Finishable): Result[] {
+    generate(finishable: HasResults): Result[] {
         let driverArray = [...finishable.drivers]
         let placeCounter = 1;
         const res = [];

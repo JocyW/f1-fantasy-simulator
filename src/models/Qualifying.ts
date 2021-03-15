@@ -1,4 +1,4 @@
-import Finishable from "./higher/Finishable";
+import HasResults from "./higher/HasResults";
 import Result from "./Result";
 import Scoreable from "../interfaces/Scoreable";
 import Driver from "./Driver";
@@ -6,7 +6,7 @@ import Team from "./Team";
 import Simulateable from "../interfaces/Simulateable";
 import BasedOnCostGenerator from "./generators/BasedOnCostGenerator";
 
-export default class Qualifying extends Finishable implements Scoreable, Simulateable {
+export default class Qualifying extends HasResults implements Scoreable, Simulateable {
     constructor() {
         super();
     }
