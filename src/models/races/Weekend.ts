@@ -4,8 +4,9 @@ import Simulateable from "../../interfaces/Simulateable";
 import Roster from "../roster/Roster";
 import HasDrivers from "../higher/HasDrivers";
 import WeekendObject from "../higher/WeekendObject";
+import FinishGenerator from "../../interfaces/FinishGenerator";
 
-export default class Weekend extends HasDrivers implements Simulateable{
+export default class Weekend extends HasDrivers implements Simulateable {
     get weekendObjects(): WeekendObject[] {
         return this._weekendObjects;
     }
@@ -19,26 +20,17 @@ export default class Weekend extends HasDrivers implements Simulateable{
     constructor() {
         super();
 
-        this._weekendObjects = [new Qualifying(),new Race()]
+        this._weekendObjects = [new Qualifying(), new Race()]
     }
 
-    simulate(): void {
-        for(let weekendObject of this.weekendObjects){
+    simulate(generator: FinishGenerator): void {
+        for (let weekendObject of this.weekendObjects) {
             weekendObject.drivers = this.drivers;
-            weekendObject.simulate();
+            weekendObject.simulate(generator);
         }
     }
 
-    getScore(roaster: Roster){
-        let score = 0;
-        for(let weekendObject of this.weekendObjects){
-            for(let driver of roaster.drivers) {
-                weekendObject.getDriverScore(driver);
-            }
-
-            weekendObject.getTeamScore(roaster.team);
-        }
-
-        return score;
+    getScore(roster: Roster) {
+        return roster.getScore(this);
     }
 }

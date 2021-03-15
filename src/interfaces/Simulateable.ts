@@ -1,3 +1,5 @@
+import FinishGenerator from "./FinishGenerator";
+
 export default interface Simulateable{
-    simulate(): void
+    simulate(generator: FinishGenerator): void
 }

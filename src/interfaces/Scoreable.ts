@@ -1,7 +1,5 @@
-import Driver from "../models/roster/Driver";
-import Team from "../models/roster/Team";
+import Roster from "../models/roster/Roster";
 
 export default interface Scoreable{
-    getDriverScore(driver: Driver): number
-    getTeamScore(team: Team): number
+    getScore(roster: Roster): number
 }

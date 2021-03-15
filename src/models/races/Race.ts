@@ -1,13 +1,11 @@
-import HasResults from "../higher/HasResults";
-import Scoreable from "../../interfaces/Scoreable";
 import Driver from "../roster/Driver";
-import Team from "../roster/Team";
-import Simulateable from "../../interfaces/Simulateable";
 import Qualifying from "./Qualifying";
 import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
+import WeekendObject from "../higher/WeekendObject";
+import FinishGenerator from "../../interfaces/FinishGenerator";
 
 
-export default class Race extends HasResults implements Scoreable, Simulateable {
+export default class Race extends WeekendObject {
 
     static POINTS_MAP = [25, 18, 15, 12, 19, 8, 6, 4, 2, 1];
 
@@ -66,27 +64,15 @@ export default class Race extends HasResults implements Scoreable, Simulateable 
         }
         //TODO: DNF + Disqualification
 
-        if(raceResult.place <= Race.POINTS_MAP.length){
+        if (raceResult.place <= Race.POINTS_MAP.length) {
             score += Race.POINTS_MAP[raceResult.place - 1];
         }
 
         return score;
     }
 
-    getTeamScore(team: Team): number {
-        let score = 0;
-
-        const drivers = this.drivers.filter((driver) => driver.team.id === team.id);
-
-        for(let driver of drivers){
-            score += this.getDriverScore(driver, true);
-        }
-
-        return score;
-    }
-
-    simulate(): void {
-        this.results = new BasedOnCostGenerator().generate(this);
+    simulate(generator: FinishGenerator): void {
+        this.results = generator.generate(this);
 
         console.log('Qualifying simulation done...');
         for (let result of this.results

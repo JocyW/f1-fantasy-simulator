@@ -1,15 +1,14 @@
 import Driver from "../roster/Driver";
-import Team from "../roster/Team";
-import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
 import WeekendObject from "../higher/WeekendObject";
+import FinishGenerator from "../../interfaces/FinishGenerator";
 
-export default class Qualifying extends WeekendObject{
+export default class Qualifying extends WeekendObject {
     constructor() {
         super();
     }
 
-    simulate(): void {
-        this.results = new BasedOnCostGenerator().generate(this);
+    simulate(generator: FinishGenerator): void {
+        this.results = generator.generate(this);
 
         console.log('Qualifying simulation done...');
         for (let result of this.results) {
@@ -47,22 +46,6 @@ export default class Qualifying extends WeekendObject{
         //TODO: did not qualify
         //TODO: Disqualification
 
-        return score;
-    }
-
-    getTeamScore(team: Team): number {
-        if (!this.results.length) {
-            throw Error('Simulate must be called first')
-        }
-
-        let score;
-        const drivers = this.results.map((res) => res.driver.team.id === team.id ? res.driver : undefined);
-
-        for (let driver of drivers) {
-            if (driver) {
-                score = this.getDriverScore(driver, true);
-            }
-        }
         return score;
     }
 }

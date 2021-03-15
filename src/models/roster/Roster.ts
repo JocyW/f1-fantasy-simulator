@@ -10,6 +10,7 @@ export default class Roster{
     set team(value: Team) {
         this._team = value;
     }
+
     get drivers(): [Driver, Driver, Driver, Driver, Driver] {
         return this._drivers;
     }
@@ -17,11 +18,26 @@ export default class Roster{
     set drivers(value: [Driver, Driver, Driver, Driver, Driver]) {
         this._drivers = value;
     }
-    private _drivers: [Driver,Driver,Driver,Driver,Driver];
+
+    private _drivers: [Driver, Driver, Driver, Driver, Driver];
     private _team: Team;
 
 
-    getScore(weekend: Weekend){
-        return weekend.getScore(this);
+    getScore(weekend: Weekend) {
+        let score = 0;
+        for (let weekendObject of weekend.weekendObjects) {
+            for (let driver of weekendObject.drivers) {
+                score += weekendObject.getDriverScore(driver, false);
+            }
+
+            for (let driver of this.getTeamDrivers(weekendObject.drivers)) {
+                score += weekendObject.getDriverScore(driver, true);
+            }
+        }
+        return score;
+    }
+
+    getTeamDrivers(drivers: Driver[]) {
+        return drivers.filter((driver) => driver.team.id === this.team.id);
     }
 }
