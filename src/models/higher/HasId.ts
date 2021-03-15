@@ -1,4 +1,4 @@
-export default class HasId{
+export default abstract class HasId{
     id: Symbol;
 
     constructor(props: {id: Symbol}) {

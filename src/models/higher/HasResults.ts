@@ -1,7 +1,7 @@
 import Result from "../Result";
 import HasDrivers from "./HasDrivers";
 
-export default class HasResults extends HasDrivers{
+export default abstract class HasResults extends HasDrivers{
 
     get results(): Result[] {
         return this._results;
