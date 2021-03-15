@@ -1,25 +1,20 @@
-import HasResults from "./higher/HasResults";
-import Result from "./Result";
-import Scoreable from "../interfaces/Scoreable";
 import Driver from "./Driver";
 import Team from "./Team";
-import Simulateable from "../interfaces/Simulateable";
 import BasedOnCostGenerator from "./generators/BasedOnCostGenerator";
+import WeekendObject from "./WeekendObject";
 
-export default class Qualifying extends HasResults implements Scoreable, Simulateable {
+export default class Qualifying extends WeekendObject{
     constructor() {
         super();
     }
 
     simulate(): void {
-
-        const res = new BasedOnCostGenerator().generate(this);
+        this.results = new BasedOnCostGenerator().generate(this);
 
         console.log('Qualifying simulation done...');
-        for (let result of res) {
+        for (let result of this.results) {
             console.log(`${result.place}. - ${result.driver.firstName} ${result.driver.lastName}`)
         }
-        this.results = res;
     }
 
     getDriverScore(driver: Driver, forTeam = false): number {

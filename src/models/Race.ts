@@ -1,10 +1,10 @@
 import HasResults from "./higher/HasResults";
-import Result from "./Result";
 import Scoreable from "../interfaces/Scoreable";
 import Driver from "./Driver";
 import Team from "./Team";
 import Simulateable from "../interfaces/Simulateable";
 import Qualifying from "./Qualifying";
+import BasedOnCostGenerator from "./generators/BasedOnCostGenerator";
 
 export default class Race extends HasResults implements Scoreable, Simulateable{
     get qualifying(): Qualifying {
@@ -30,6 +30,12 @@ export default class Race extends HasResults implements Scoreable, Simulateable{
     }
 
     simulate(): void {
+        this.results = new BasedOnCostGenerator().generate(this);
+
+        console.log('Qualifying simulation done...');
+        for (let result of this.results) {
+            console.log(`${result.place}. - ${result.driver.firstName} ${result.driver.lastName}`)
+        }
     }
 
 }

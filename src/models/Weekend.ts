@@ -1,53 +1,43 @@
-import Scoreable from "../interfaces/Scoreable";
 import Qualifying from "./Qualifying";
 import Race from "./Race";
 import Simulateable from "../interfaces/Simulateable";
-import Driver from "./Driver";
 import Roaster from "./Roaster";
 import HasDrivers from "./higher/HasDrivers";
+import WeekendObject from "./WeekendObject";
 
 export default class Weekend extends HasDrivers implements Simulateable{
-    get race(): Race {
-        return this._race;
+    get weekendObjects(): WeekendObject[] {
+        return this._weekendObjects;
     }
 
-    set race(value: Race) {
-        this._race = value;
-    }
-    get qualifying(): Qualifying {
-        return this._qualifying;
+    set weekendObjects(value: WeekendObject[]) {
+        this._weekendObjects = value;
     }
 
-    set qualifying(value: Qualifying) {
-        this._qualifying = value;
-    }
-    private _qualifying: Qualifying;
-    private _race: Race;
+    private _weekendObjects: WeekendObject[] = []
 
     constructor() {
         super();
-        this._qualifying = new Qualifying();
-        this._race = new Race();
 
-        this.race.qualifying = this.qualifying;
+        this._weekendObjects = [new Qualifying(),new Race()]
     }
 
     simulate(): void {
-        this.qualifying.drivers = this.drivers;
-        this.race.drivers = this.drivers;
-
-        this.qualifying.simulate();
-        this.race.simulate();
+        for(let weekendObject of this.weekendObjects){
+            weekendObject.drivers = this.drivers;
+            weekendObject.simulate();
+        }
     }
 
     getScore(roaster: Roaster){
         let score = 0;
-        for(let driver of roaster.drivers){
-            score += this.qualifying.getDriverScore(driver);
-            score += this.race.getDriverScore(driver);
+        for(let weekendObject of this.weekendObjects){
+            for(let driver of roaster.drivers) {
+                weekendObject.getDriverScore(driver);
+            }
+
+            weekendObject.getTeamScore(roaster.team);
         }
-        score += this.qualifying.getTeamScore(roaster.team);
-        score += this.race.getTeamScore(roaster.team);
 
         return score;
     }
