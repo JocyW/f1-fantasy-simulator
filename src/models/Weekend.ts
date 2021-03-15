@@ -1,7 +1,7 @@
 import Qualifying from "./Qualifying";
 import Race from "./Race";
 import Simulateable from "../interfaces/Simulateable";
-import Roaster from "./Roaster";
+import Roster from "./Roster";
 import HasDrivers from "./higher/HasDrivers";
 import WeekendObject from "./WeekendObject";
 
@@ -29,7 +29,7 @@ export default class Weekend extends HasDrivers implements Simulateable{
         }
     }
 
-    getScore(roaster: Roaster){
+    getScore(roaster: Roster){
         let score = 0;
         for(let weekendObject of this.weekendObjects){
             for(let driver of roaster.drivers) {

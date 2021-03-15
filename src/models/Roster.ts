@@ -2,7 +2,7 @@ import Driver from "./Driver";
 import Team from "./Team";
 import Weekend from "./Weekend";
 
-export default class Roaster{
+export default class Roster{
     get team(): Team {
         return this._team;
     }
