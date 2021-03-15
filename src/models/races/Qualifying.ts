@@ -23,7 +23,7 @@ export default class Qualifying extends WeekendObject{
         }
 
         let score = 1;
-        const result = this.results.find((res) => res.driver.id === driver.id);
+        const result = this.findResultByDriverId(driver.id);
 
         // Q2 Finish
         if (result.place <= 15) {
@@ -40,7 +40,7 @@ export default class Qualifying extends WeekendObject{
         }
 
         // Better than teammate
-        if (result.place < this.results.find((res) => res.driver.id === driver.id && res.driver.team.id === driver.team.id).place && !forTeam) {
+        if (result.place < this.findTeammateResult(driver).place && !forTeam) {
             score += 2
         }
 

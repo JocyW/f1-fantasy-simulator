@@ -1,5 +1,6 @@
-import Result from "../weekend/Result";
+import Result from "../races/Result";
 import HasDrivers from "./HasDrivers";
+import Driver from "../roster/Driver";
 
 export default abstract class HasResults extends HasDrivers{
 
@@ -12,4 +13,11 @@ export default abstract class HasResults extends HasDrivers{
     }
     private _results: Result[] = [];
 
+    findResultByDriverId(driverId: Symbol): Result{
+        return this.results.find((result) => result.driver.id === driverId);
+    }
+
+    findTeammateResult(driver: Driver): Result{
+        return this.results.find((result) => result.driver.id !== driver.id && result.driver.team.id === driver.team.id)
+    }
 }
