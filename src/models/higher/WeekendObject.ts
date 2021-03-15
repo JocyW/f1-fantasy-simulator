@@ -7,6 +7,9 @@ import Roster from "../roster/Roster";
 import FinishGenerator from "../../interfaces/FinishGenerator";
 
 export default abstract class WeekendObject extends HasResults implements Simulateable{
+
+    abstract type: string;
+
     abstract getDriverScore(driver: Driver, isTeam: boolean): number
     abstract simulate(generator: FinishGenerator): void
 }

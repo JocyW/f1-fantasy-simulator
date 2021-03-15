@@ -1,6 +1,15 @@
 import Driver from "../roster/Driver";
 
 export default class Result{
+
+    private _driver: Driver;
+    private _place: number;
+
+    constructor(props: {driver: Driver, place: number}) {
+        this._driver = props.driver;
+        this._place = props.place;
+    }
+
     get driver(): Driver {
         return this._driver;
     }
@@ -14,12 +23,5 @@ export default class Result{
 
     set place(value: number) {
         this._place = value;
-    }
-    private _driver: Driver;
-    private _place: number;
-
-    constructor(props: {driver: Driver, place: number}) {
-        this._driver = props.driver;
-        this._place = props.place;
     }
 }

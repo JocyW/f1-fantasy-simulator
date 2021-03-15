@@ -21,21 +21,7 @@ export default class Roster{
 
     private _drivers: [Driver, Driver, Driver, Driver, Driver];
     private _team: Team;
-
-
-    getScore(weekend: Weekend) {
-        let score = 0;
-        for (let weekendObject of weekend.weekendObjects) {
-            for (let driver of weekendObject.drivers) {
-                score += weekendObject.getDriverScore(driver, false);
-            }
-
-            for (let driver of this.getTeamDrivers(weekendObject.drivers)) {
-                score += weekendObject.getDriverScore(driver, true);
-            }
-        }
-        return score;
-    }
+    private turboDriver: Driver
 
     getTeamDrivers(drivers: Driver[]) {
         return drivers.filter((driver) => driver.team.id === this.team.id);

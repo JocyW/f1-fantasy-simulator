@@ -7,23 +7,24 @@ import FinishGenerator from "../../interfaces/FinishGenerator";
 
 export default class Race extends WeekendObject {
 
+    public type = 'Race'
+
     static POINTS_MAP = [25, 18, 15, 12, 19, 8, 6, 4, 2, 1];
 
-    get qualifying(): Qualifying {
-        return this._qualifying;
-    }
-
-    set qualifying(value: Qualifying) {
-        this._qualifying = value;
-    }
-
     private _qualifying: Qualifying;
+
+    //TODO: fastest lap
 
     constructor() {
         super();
     }
 
     getDriverScore(driver: Driver, forTeam = false): number {
+
+        if(!this.qualifying){
+            throw Error('Race has no qualifying');
+        }
+
         // Finished race
         //TODO: change when DNF implemented
         let score = 1;
@@ -73,12 +74,14 @@ export default class Race extends WeekendObject {
 
     simulate(generator: FinishGenerator): void {
         this.results = generator.generate(this);
+    }
 
-        console.log('Qualifying simulation done...');
-        for (let result of this.results
-            ) {
-            console.log(`${result.place}. - ${result.driver.firstName} ${result.driver.lastName}`)
-        }
+    get qualifying(): Qualifying {
+        return this._qualifying;
+    }
+
+    set qualifying(value: Qualifying) {
+        this._qualifying = value;
     }
 
 }

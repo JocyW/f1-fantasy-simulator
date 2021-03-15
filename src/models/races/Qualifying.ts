@@ -1,19 +1,18 @@
 import Driver from "../roster/Driver";
 import WeekendObject from "../higher/WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
+import {DEBUG_ENABLED} from "../../main";
 
 export default class Qualifying extends WeekendObject {
+
+    public type = 'Qualifying'
+
     constructor() {
         super();
     }
 
     simulate(generator: FinishGenerator): void {
         this.results = generator.generate(this);
-
-        console.log('Qualifying simulation done...');
-        for (let result of this.results) {
-            console.log(`${result.place}. - ${result.driver.firstName} ${result.driver.lastName}`)
-        }
     }
 
     getDriverScore(driver: Driver, forTeam = false): number {
