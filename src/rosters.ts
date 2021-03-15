@@ -10,6 +10,7 @@ import {drivers, teams} from "./generate";
 const roster1 = new Roster();
 roster1.drivers = [drivers.verstappen,drivers.schumacher,drivers.latifi,drivers.norris,drivers.gasly];
 roster1.team = teams.mercedes;
+roster1.turboDriver = drivers.norris;
 
 
 export default [
