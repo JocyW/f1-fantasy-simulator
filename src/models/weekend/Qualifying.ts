@@ -1,6 +1,6 @@
-import Driver from "./Driver";
-import Team from "./Team";
-import BasedOnCostGenerator from "./generators/BasedOnCostGenerator";
+import Driver from "../roster/Driver";
+import Team from "../roster/Team";
+import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
 import WeekendObject from "./WeekendObject";
 
 export default class Qualifying extends WeekendObject{

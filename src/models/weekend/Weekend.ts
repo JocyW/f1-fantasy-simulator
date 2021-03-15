@@ -1,8 +1,8 @@
 import Qualifying from "./Qualifying";
 import Race from "./Race";
-import Simulateable from "../interfaces/Simulateable";
-import Roster from "./Roster";
-import HasDrivers from "./higher/HasDrivers";
+import Simulateable from "../../interfaces/Simulateable";
+import Roster from "../roster/Roster";
+import HasDrivers from "../higher/HasDrivers";
 import WeekendObject from "./WeekendObject";
 
 export default class Weekend extends HasDrivers implements Simulateable{

@@ -1,5 +1,5 @@
-import Team from "./models/Team";
-import Driver from "./models/Driver";
+import Team from "./models/roster/Team";
+import Driver from "./models/roster/Driver";
 
 export const teams = {
     'mercedes': new Team({name: 'Mercedes', cost: 38}),

@@ -1,6 +1,6 @@
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import HasResults from "../higher/HasResults";
-import Result from "../Result";
+import Result from "../weekend/Result";
 
 export default class BasedOnCostGenerator implements FinishGenerator{
     generate(finishable: HasResults): Result[] {

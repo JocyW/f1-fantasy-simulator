@@ -1,4 +1,4 @@
-import HasCost from "./higher/HasCost";
+import HasCost from "../higher/HasCost";
 
 export default class Team extends HasCost {
     name: string;

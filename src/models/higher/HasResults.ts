@@ -1,4 +1,4 @@
-import Result from "../Result";
+import Result from "../weekend/Result";
 import HasDrivers from "./HasDrivers";
 
 export default abstract class HasResults extends HasDrivers{

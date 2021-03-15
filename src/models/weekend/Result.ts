@@ -1,4 +1,4 @@
-import Driver from "./Driver";
+import Driver from "../roster/Driver";
 
 export default class Result{
     get driver(): Driver {

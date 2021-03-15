@@ -1,4 +1,4 @@
-import Driver from "../Driver";
+import Driver from "../roster/Driver";
 
 export default abstract class HasDrivers{
     private _drivers: Driver[] = [];

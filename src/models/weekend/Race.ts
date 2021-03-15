@@ -1,10 +1,10 @@
-import HasResults from "./higher/HasResults";
-import Scoreable from "../interfaces/Scoreable";
-import Driver from "./Driver";
-import Team from "./Team";
-import Simulateable from "../interfaces/Simulateable";
+import HasResults from "../higher/HasResults";
+import Scoreable from "../../interfaces/Scoreable";
+import Driver from "../roster/Driver";
+import Team from "../roster/Team";
+import Simulateable from "../../interfaces/Simulateable";
 import Qualifying from "./Qualifying";
-import BasedOnCostGenerator from "./generators/BasedOnCostGenerator";
+import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
 
 export default class Race extends HasResults implements Scoreable, Simulateable{
     get qualifying(): Qualifying {

@@ -1,6 +1,6 @@
 import {drivers, teams} from "./generate";
-import Roster from "./models/Roster";
-import Weekend from "./models/Weekend";
+import Roster from "./models/roster/Roster";
+import Weekend from "./models/weekend/Weekend";
 
 const roaster = new Roster();
 roaster.drivers = [drivers.verstappen,drivers.schumacher,drivers.latifi,drivers.norris,drivers.gasly];
