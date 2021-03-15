@@ -1,7 +1,7 @@
 import Driver from "../roster/Driver";
 import Team from "../roster/Team";
 import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
-import WeekendObject from "./WeekendObject";
+import WeekendObject from "../higher/WeekendObject";
 
 export default class Qualifying extends WeekendObject{
     constructor() {

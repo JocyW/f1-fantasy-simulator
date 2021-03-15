@@ -1,4 +1,4 @@
-import HasResults from "../higher/HasResults";
+import HasResults from "./HasResults";
 import Scoreable from "../../interfaces/Scoreable";
 import Simulateable from "../../interfaces/Simulateable";
 import Driver from "../roster/Driver";
