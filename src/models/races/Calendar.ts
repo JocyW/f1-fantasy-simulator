@@ -1,6 +1,3 @@
-import WeekendObject from "../higher/WeekendObject";
-import Driver from "../roster/Driver";
-import Team from "../roster/Team";
 import Weekend from "./Weekend";
 import Simulateable from "../../interfaces/Simulateable";
 import FinishGenerator from "../../interfaces/FinishGenerator";

@@ -1,6 +1,5 @@
 import Driver from "./Driver";
 import Team from "./Team";
-import Weekend from "../races/Weekend";
 
 export default class Roster{
     get team(): Team {

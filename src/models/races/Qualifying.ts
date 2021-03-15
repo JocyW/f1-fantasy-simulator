@@ -1,7 +1,6 @@
 import Driver from "../roster/Driver";
 import WeekendObject from "../higher/WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
-import {DEBUG_ENABLED} from "../../main";
 
 export default class Qualifying extends WeekendObject {
 

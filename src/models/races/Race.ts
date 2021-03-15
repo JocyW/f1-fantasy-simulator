@@ -1,6 +1,5 @@
 import Driver from "../roster/Driver";
 import Qualifying from "./Qualifying";
-import BasedOnCostGenerator from "../generators/BasedOnCostGenerator";
 import WeekendObject from "../higher/WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
 
