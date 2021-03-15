@@ -22,7 +22,7 @@ export default class Weekend extends HasDrivers implements Simulateable {
     }
 
     simulate(generator: FinishGenerator): void {
-        if(DEBUG_ENABLED){
+        if (DEBUG_ENABLED) {
             console.log('Simulating Weekend')
         }
         for (let weekendObject of this.weekendObjects) {
@@ -36,7 +36,7 @@ export default class Weekend extends HasDrivers implements Simulateable {
 
             if (DEBUG_ENABLED) {
                 console.log('Results for ' + weekendObject.type);
-                for(let result of weekendObject.results){
+                for (let result of weekendObject.results) {
                     console.log(`${result.place}. ${result.driver.firstName} ${result.driver.lastName}`)
                 }
             }
@@ -47,7 +47,13 @@ export default class Weekend extends HasDrivers implements Simulateable {
         let score = 0;
         for (let weekendObject of this.weekendObjects) {
             for (let driver of weekendObject.drivers) {
-                score += weekendObject.getDriverScore(driver, false);
+                let driverScore = weekendObject.getDriverScore(driver, false);
+
+                if (roster.isTurboDriver(driver)) {
+                    driverScore *= 2;
+                }
+
+                score += driverScore;
             }
 
             for (let driver of roster.getTeamDrivers(weekendObject.drivers)) {
@@ -56,6 +62,7 @@ export default class Weekend extends HasDrivers implements Simulateable {
         }
         return score;
     }
+
     get weekendObjects(): WeekendObject[] {
         return this._weekendObjects;
     }
