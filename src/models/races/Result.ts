@@ -2,6 +2,9 @@ import Driver from "../roster/Driver";
 
 export default class Result{
 
+    static PLACE_DNF = -1;
+    static PLACE_DISQUALIFICATION = -2;
+
     private _driver: Driver;
     private _place: number;
 
