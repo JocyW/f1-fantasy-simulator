@@ -31,5 +31,4 @@ export default class BasedOnCostGenerator implements FinishGenerator{
 
         return res;
     }
-
 }
