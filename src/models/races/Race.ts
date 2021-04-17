@@ -7,23 +7,30 @@ import Logger from "../../logger";
 
 export default class Race extends WeekendObject implements WithLogger {
 
-    public type = 'Race'
-
     static POINTS_MAP = [25, 18, 15, 12, 19, 8, 6, 4, 2, 1];
-
-    private _qualifying: Qualifying;
+    public type = 'Race'
     public logger: Logger;
-
-
-    //TODO: fastest lap
 
     constructor() {
         super();
         this.logger = new Logger(this.type);
     }
 
+
+    //TODO: fastest lap
+
+    private _qualifying: Qualifying;
+
+    get qualifying(): Qualifying {
+        return this._qualifying;
+    }
+
+    set qualifying(value: Qualifying) {
+        this._qualifying = value;
+    }
+
     getDriverScore(driver: Driver, forTeam = false): Promise<number> {
-        this.logger.debug('Getting driver score', driver,forTeam)
+        this.logger.debug('Getting driver score', driver, forTeam)
         return new Promise(resolve => {
             if (!this.qualifying) {
                 throw Error('Race has no qualifying');
@@ -36,62 +43,54 @@ export default class Race extends WeekendObject implements WithLogger {
             const raceResult = this.findResultByDriverId(driver.id)
             const qualiResult = this.qualifying.findResultByDriverId(driver.id);
 
-            if(raceResult.place > 0){
-            // Positions gained in race
-            const resultDiff = qualiResult.place - raceResult.place;
-            if (resultDiff > 0) {
-                if (resultDiff > 10) {
-                    score += 10;
-                } else {
-                    score += resultDiff
-                }
-            }
-
-            if (!forTeam) {
-                // Finished ahead of team mate
-                if (raceResult.place < this.findTeammateResult(driver).place) {
-                    score += 3;
-                }
-                //TODO: fastest lap
-            }
-
-            // Started race within Top 10, finished race but lost position (per place lost, max. -10 pts)
-            // Started race outside Top 10, finished race but lost position (per place lost, max. -5 pts)
-            let difference = (raceResult.place - qualiResult.place);
-
-            if (difference > 0) {
-                const modifier = qualiResult.place > 10 ? -1 : -2;
-
-                if (difference > 5) {
-                    difference = 5;
+            if (raceResult.place > 0) {
+                // Positions gained in race
+                const resultDiff = qualiResult.place - raceResult.place;
+                if (resultDiff > 0) {
+                    if (resultDiff > 10) {
+                        score += 10;
+                    } else {
+                        score += resultDiff
+                    }
                 }
 
-                score += difference * modifier;
-            }
-            //TODO: DNF + Disqualification
+                if (!forTeam) {
+                    // Finished ahead of team mate
+                    if (raceResult.place < this.findTeammateResult(driver).place) {
+                        score += 3;
+                    }
+                    //TODO: fastest lap
+                }
 
-            if (raceResult.place <= Race.POINTS_MAP.length) {
-                score += Race.POINTS_MAP[raceResult.place - 1];
-            }
+                // Started race within Top 10, finished race but lost position (per place lost, max. -10 pts)
+                // Started race outside Top 10, finished race but lost position (per place lost, max. -5 pts)
+                let difference = (raceResult.place - qualiResult.place);
+
+                if (difference > 0) {
+                    const modifier = qualiResult.place > 10 ? -1 : -2;
+
+                    if (difference > 5) {
+                        difference = 5;
+                    }
+
+                    score += difference * modifier;
+                }
+                //TODO: DNF + Disqualification
+
+                if (raceResult.place <= Race.POINTS_MAP.length) {
+                    score += Race.POINTS_MAP[raceResult.place - 1];
+                }
 
             }
 
-            if(isNaN(score)){
-                console.log(driver,forTeam, raceResult);
+            if (isNaN(score)) {
+                console.log(driver, forTeam, raceResult);
                 throw Error('What the fuck? - Race');
             }
 
             this.logger.debug('got driver score: ' + score);
             resolve(score);
         })
-    }
-
-    get qualifying(): Qualifying {
-        return this._qualifying;
-    }
-
-    set qualifying(value: Qualifying) {
-        this._qualifying = value;
     }
 
 }

@@ -12,15 +12,12 @@ import {mapDriverId} from '../data/csv/mappings/func';
 import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import WithLogger from "../../interfaces/WithLogger";
-import logger from "../../logger";
 import Logger from "../../logger";
 
 export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
 
-    private historyData: CombinedHistoryData;
-
     public logger: Logger;
-
+    private historyData: CombinedHistoryData;
     private raceIndex = 0;
 
     constructor(seasonYear: string) {
@@ -28,21 +25,6 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
         this.historyData = new CombinedHistoryData();
         this.logger = new Logger('BasedOnSeasonGenerator');
     }
-
-
-    private getResults(hasResults: HasResults, race: RaceData): FinishableData[] {
-        let mapping: WeakMap<RaceData, FinishableData[]>;
-
-        if (hasResults instanceof Race) {
-            mapping = this.historyData.resultsMapping;
-        } else if (hasResults instanceof Qualifying) {
-            mapping = this.historyData.qualifyingResultsMapping
-        } else {
-            throw Error('Generate must be called with Race or Qualifying as parameter')
-        }
-        return mapping.get(race);
-    }
-
 
     async generate(hasResults: HasResults): Promise<Result[]> {
         this.logger.debug('Generating results');
@@ -102,6 +84,19 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
         this.raceIndex++;
 
         return results;
+    }
+
+    private getResults(hasResults: HasResults, race: RaceData): FinishableData[] {
+        let mapping: WeakMap<RaceData, FinishableData[]>;
+
+        if (hasResults instanceof Race) {
+            mapping = this.historyData.resultsMapping;
+        } else if (hasResults instanceof Qualifying) {
+            mapping = this.historyData.qualifyingResultsMapping
+        } else {
+            throw Error('Generate must be called with Race or Qualifying as parameter')
+        }
+        return mapping.get(race);
     }
 
 }

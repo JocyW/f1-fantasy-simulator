@@ -1,6 +1,6 @@
 import Driver from "../roster/Driver";
 
-export default abstract class HasDrivers{
+export default abstract class HasDrivers {
     private _drivers: Driver[] = [];
     get drivers(): Driver[] {
         return this._drivers;

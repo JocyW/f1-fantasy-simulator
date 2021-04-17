@@ -1,4 +1,4 @@
-export default abstract class HasSeasonYear{
+export default abstract class HasSeasonYear {
     public seasonYear: string;
 
     constructor(seasonYear: string) {

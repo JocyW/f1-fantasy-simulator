@@ -10,11 +10,9 @@ export type RaceData = {
 }
 
 export class RacesTable extends CsvTable<RaceData> {
-    path: string = 'assets/history/races.csv';
-
     static instance: RacesTable;
-
     static singleton = singleton(RacesTable);
+    path: string = 'assets/history/races.csv';
 }
 
 export default RacesTable.singleton()

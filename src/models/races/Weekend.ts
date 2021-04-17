@@ -10,7 +10,6 @@ import Logger from "../../logger";
 
 export default class Weekend extends HasDrivers implements Simulateable, WithLogger {
 
-    private _weekendObjects: WeekendObject[] = []
     public logger: Logger;
 
     constructor() {
@@ -24,6 +23,15 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
         this.logger = new Logger('Weekend')
     }
 
+    private _weekendObjects: WeekendObject[] = []
+
+    get weekendObjects(): WeekendObject[] {
+        return this._weekendObjects;
+    }
+
+    set weekendObjects(value: WeekendObject[]) {
+        this._weekendObjects = value;
+    }
 
     async simulate(generator: FinishGenerator): Promise<void> {
         this.logger.debug('Simulating Weekend')
@@ -65,13 +73,5 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
             }
         }
         return score;
-    }
-
-    get weekendObjects(): WeekendObject[] {
-        return this._weekendObjects;
-    }
-
-    set weekendObjects(value: WeekendObject[]) {
-        this._weekendObjects = value;
     }
 }

@@ -5,40 +5,43 @@ import WithLogger from "../../../interfaces/WithLogger";
 import Logger from "../../../logger";
 
 export default class CombinedHistoryData implements WithLogger {
-    get qualifyingResultsMapping(): WeakMap<RaceData, QualifyingData[]> {
-        return this._qualifyingResultsMapping;
-    }
-
-    get resultsMapping(): WeakMap<RaceData, ResultData[]> {
-        return this._resultsMapping;
-    }
-
-    get qualifyingResults(): QualifyingData[] {
-        return this._qualifyingResults;
-    }
-
-    get results(): ResultData[] {
-        return this._results;
-    }
-
-    get races(): RaceData[] {
-        return this._races;
-    }
-
+    public logger: Logger;
     private seasonYear: string;
     private readCsvsAlready = false;
-    private _races: RaceData[];
-    private _results: ResultData[];
-    private _qualifyingResults: QualifyingData[];
-    private _resultsMapping: WeakMap<RaceData, ResultData[]> = new WeakMap<RaceData, ResultData[]>();
-    private _qualifyingResultsMapping: WeakMap<RaceData, QualifyingData[]> = new WeakMap<RaceData, QualifyingData[]>();
-
-    public logger: Logger;
 
     constructor() {
         this.logger = new Logger('CombinedHistoryData');
     }
 
+    private _races: RaceData[];
+
+    get races(): RaceData[] {
+        return this._races;
+    }
+
+    private _results: ResultData[];
+
+    get results(): ResultData[] {
+        return this._results;
+    }
+
+    private _qualifyingResults: QualifyingData[];
+
+    get qualifyingResults(): QualifyingData[] {
+        return this._qualifyingResults;
+    }
+
+    private _resultsMapping: WeakMap<RaceData, ResultData[]> = new WeakMap<RaceData, ResultData[]>();
+
+    get resultsMapping(): WeakMap<RaceData, ResultData[]> {
+        return this._resultsMapping;
+    }
+
+    private _qualifyingResultsMapping: WeakMap<RaceData, QualifyingData[]> = new WeakMap<RaceData, QualifyingData[]>();
+
+    get qualifyingResultsMapping(): WeakMap<RaceData, QualifyingData[]> {
+        return this._qualifyingResultsMapping;
+    }
 
     public getRaceResultForRace(race: RaceData): ResultData[] {
         if (!this.readCsvsAlready) {

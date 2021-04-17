@@ -10,6 +10,58 @@ export type RosterBackupObject = {
 
 export default class Roster {
 
+    private _drivers: [Driver, Driver, Driver, Driver, Driver];
+
+    get drivers(): [Driver, Driver, Driver, Driver, Driver] {
+        return this._drivers;
+    }
+
+    set drivers(value: [Driver, Driver, Driver, Driver, Driver]) {
+        this._drivers = value;
+        this.checkTotalCost();
+    }
+
+    private _team: Team;
+
+    get team(): Team {
+        return this._team;
+    }
+
+    set team(value: Team) {
+        this._team = value;
+        this.checkTotalCost();
+    }
+
+    private _turboDriver: Driver
+
+    get turboDriver(): Driver {
+        return this._turboDriver;
+    }
+
+    set turboDriver(value: Driver) {
+        if (value.cost >= 20) {
+            throw Error(`${this.name}: Turbo driver must cost less than 20 million`)
+        }
+
+        this._turboDriver = value;
+    }
+
+    private _name: string
+
+    get name(): string {
+        return this._name;
+    }
+
+    set name(value: string) {
+        this._name = value;
+    }
+
+    get numericalId(): string {
+        return (this.drivers.reduce((acc, driver) => acc += driver.id, 0)
+            + this.team.id
+        ).toString() + this.turboDriver.id;
+    }
+
     static fromBackupObject(object: RosterBackupObject): Roster {
 
         const driversArray = Object.values(drivers);
@@ -21,11 +73,6 @@ export default class Roster {
 
         return roster;
     }
-
-    private _drivers: [Driver, Driver, Driver, Driver, Driver];
-    private _team: Team;
-    private _turboDriver: Driver
-    private _name: string
 
     getTeamDrivers(drivers: Driver[]) {
         return drivers.filter((driver) => driver.team.id === this.team.id);
@@ -51,49 +98,5 @@ export default class Roster {
             drivers: this.drivers.map((driver) => driver.id),
             turboDriver: this.turboDriver.id
         }
-    }
-
-    get numericalId(): string {
-        return (this.drivers.reduce((acc, driver) => acc += driver.id, 0)
-            + this.team.id
-        ).toString() + this.turboDriver.id;
-    }
-
-    get turboDriver(): Driver {
-        return this._turboDriver;
-    }
-
-    set turboDriver(value: Driver) {
-        if (value.cost >= 20) {
-            throw Error(`${this.name}: Turbo driver must cost less than 20 million`)
-        }
-
-        this._turboDriver = value;
-    }
-
-    get team(): Team {
-        return this._team;
-    }
-
-    set team(value: Team) {
-        this._team = value;
-        this.checkTotalCost();
-    }
-
-    get drivers(): [Driver, Driver, Driver, Driver, Driver] {
-        return this._drivers;
-    }
-
-    set drivers(value: [Driver, Driver, Driver, Driver, Driver]) {
-        this._drivers = value;
-        this.checkTotalCost();
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
     }
 }

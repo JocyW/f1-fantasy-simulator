@@ -8,15 +8,6 @@ import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../../logger";
 
 export default class Calendar extends HasDrivers implements Simulateable, Scoreable, WithLogger {
-    get weekends(): Weekend[] {
-        return this._weekends;
-    }
-
-    set weekends(value: Weekend[]) {
-        this._weekends = value;
-    }
-
-    private _weekends: Weekend[] = [];
     public logger: Logger;
 
     constructor(numberOfWeekends: number) {
@@ -27,6 +18,16 @@ export default class Calendar extends HasDrivers implements Simulateable, Scorea
         for (let i = 0; i < numberOfWeekends; i++) {
             this.weekends.push(new Weekend())
         }
+    }
+
+    private _weekends: Weekend[] = [];
+
+    get weekends(): Weekend[] {
+        return this._weekends;
+    }
+
+    set weekends(value: Weekend[]) {
+        this._weekends = value;
     }
 
     async simulate(generator: FinishGenerator): Promise<void> {
