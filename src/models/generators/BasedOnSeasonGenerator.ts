@@ -1,26 +1,26 @@
-import FinishGenerator from "../../../interfaces/FinishGenerator";
-import HasResults from "../../higher/HasResults";
-import Result from "../../races/Result";
-import {RaceData} from "../../data/csv/RacesTable";
-import {ResultsTable} from '../../data/csv/ResultsTable';
-import {FinishableData} from "../../data/csv/FinishableData";
-import Race from "../../races/Race";
-import Qualifying from "../../races/Qualifying";
-import {HISTORY_IDS} from "../../data/csv/mappings/data";
-import {drivers} from "../../../generate";
-import {mapDriverId} from '../../data/csv/mappings/func';
-import CombinedHistoryData from "../../data/csv/CombinedHistoryData";
+import FinishGenerator from "../../interfaces/FinishGenerator";
+import HasResults from "../higher/HasResults";
+import Result from "../races/Result";
+import {RaceData} from "../data/csv/RacesTable";
+import {ResultsTable} from '../data/csv/ResultsTable';
+import {FinishableData} from "../data/csv/FinishableData";
+import Race from "../races/Race";
+import Qualifying from "../races/Qualifying";
+import {CSV_DRIVER_IDS} from "../data/csv/mappings/data";
+import {drivers} from "../../generate";
+import {mapDriverId} from '../data/csv/mappings/func';
+import CombinedHistoryData from "../data/csv/CombinedHistoryData";
+import HasSeasonYear from "../higher/HasSeasonYear";
 
-export default class BasedOnSeasonGenerator implements FinishGenerator {
+export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator {
 
-    private seasonYear: string;
     private historyData: CombinedHistoryData;
 
     private raceIndex = 0;
 
     constructor(seasonYear: string) {
-        this.seasonYear = seasonYear;
-        this.historyData = new CombinedHistoryData(this.seasonYear);
+        super(seasonYear)
+        this.historyData = new CombinedHistoryData();
     }
 
     private getResults(hasResults: HasResults, race: RaceData): FinishableData[] {
@@ -46,7 +46,7 @@ export default class BasedOnSeasonGenerator implements FinishGenerator {
         }
 
         const results: Result[] = [];
-        const race: RaceData = this.historyData.races[this.raceIndex];
+        const race: RaceData = this.historyData.getRacesForSeason(this.seasonYear)[this.raceIndex];
 
 
         const csvResults = this.getResults(hasResults, race);
@@ -62,7 +62,7 @@ export default class BasedOnSeasonGenerator implements FinishGenerator {
                 }
             }
 
-            if (csvResults.find((finishable) => finishable.driverId === HISTORY_IDS.aitkin) && result.driverId === '847') {
+            if (csvResults.find((finishable) => finishable.driverId === CSV_DRIVER_IDS.aitkin) && result.driverId === '847') {
                 season2021DriverId = drivers.hamilton.id;
             }
 

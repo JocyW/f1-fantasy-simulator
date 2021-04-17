@@ -1,20 +1,24 @@
 import Driver from "../roster/Driver";
 import WeekendObject from "../higher/WeekendObject";
-import FinishGenerator from "../../interfaces/FinishGenerator";
-import Result from "./Result";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
-export default class Qualifying extends WeekendObject {
+export default class Qualifying extends WeekendObject implements WithLogger {
 
     public type = 'Qualifying'
+    public logger: Logger;
 
     constructor() {
         super();
+        this.logger = new Logger(this.type);
     }
 
+
     getDriverScore(driver: Driver, forTeam = false): Promise<number> {
+        this.logger.debug('Getting driver score', driver, forTeam)
         return new Promise(resolve => {
             if (!this.results.length) {
-                throw Error('Simulate must be called first')
+                this.logger.error('Simulate must be called first')
             }
 
             let score = 1;
@@ -42,11 +46,7 @@ export default class Qualifying extends WeekendObject {
             //TODO: did not qualify
             //TODO: Disqualification
 
-            if(isNaN(score)){
-                console.log(driver,forTeam, result);
-                throw Error('What the fuck? - Quali');
-            }
-
+            this.logger.debug('got driver score: ' + score);
             resolve(score);
         })
     }

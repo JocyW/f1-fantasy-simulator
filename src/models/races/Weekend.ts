@@ -5,11 +5,13 @@ import Roster from "../roster/Roster";
 import HasDrivers from "../higher/HasDrivers";
 import WeekendObject from "../higher/WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
-import {DEBUG_ENABLED} from "../../main";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
-export default class Weekend extends HasDrivers implements Simulateable {
+export default class Weekend extends HasDrivers implements Simulateable, WithLogger {
 
     private _weekendObjects: WeekendObject[] = []
+    public logger: Logger;
 
     constructor() {
         super();
@@ -18,13 +20,14 @@ export default class Weekend extends HasDrivers implements Simulateable {
 
         race.qualifying = quali;
 
-        this._weekendObjects = [quali, race]
+        this._weekendObjects = [quali, race];
+        this.logger = new Logger('Weekend')
     }
 
+
     async simulate(generator: FinishGenerator): Promise<void> {
-        if (DEBUG_ENABLED) {
-            console.log('Simulating Weekend')
-        }
+        this.logger.debug('Simulating Weekend')
+
         for (let weekendObject of this.weekendObjects) {
             if (!weekendObject.drivers.length)
                 weekendObject.drivers = this.drivers;
@@ -35,16 +38,16 @@ export default class Weekend extends HasDrivers implements Simulateable {
             //Called in parallel
             await weekendObject.simulate(generator);
 
-            if (DEBUG_ENABLED) {
-                console.log('Results for ' + weekendObject.type);
-                for (let result of weekendObject.results) {
-                    console.log(`${result.place}. ${result.driver.firstName} ${result.driver.lastName}`)
-                }
+            this.logger.debug('Results for ' + weekendObject.type);
+            for (let result of weekendObject.results) {
+                this.logger.debug(`${result.place}. ${result.driver.firstName} ${result.driver.lastName}`)
             }
         }
+
     }
 
     async getScore(roster: Roster) {
+        this.logger.debug('Getting score for roster', roster);
         let score = 0;
         for (let weekendObject of this.weekendObjects) {
             for (let driver of roster.drivers) {

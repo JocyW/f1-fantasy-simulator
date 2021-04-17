@@ -2,7 +2,7 @@ import {drivers, teams} from "./generate";
 import Roster from "./models/roster/Roster";
 import Calendar from "./models/races/Calendar";
 import rostersJSON from "../assets/brute_force.json";
-import BasedOnSeasonGenerator from "./models/generators/BasedOnSeason/BasedOnSeasonGenerator";
+import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator";
 
 export const DEBUG_ENABLED = false;
 
@@ -11,7 +11,7 @@ const getData = async () => {
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.drivers = Object.values(drivers);
-    await calendar.simulate(new BasedOnSeasonGenerator('2020'));
+    await calendar.simulate(new BasedOnWeightedHistoryDataGenerator('2020'));
 
     const topRoster = new Roster();
     topRoster.drivers = [drivers.verstappen, drivers.ricciardo, drivers.tsunoda, drivers.mazepin, drivers.mazepin];

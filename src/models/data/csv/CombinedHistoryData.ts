@@ -2,19 +2,23 @@ import races, {RaceData} from "./RacesTable";
 import results, {ResultData} from "./ResultsTable";
 import qualifyingData, {QualifyingData} from "./QualityingsTable";
 
-export default class CombinedHistoryData{
+export default class CombinedHistoryData {
     get qualifyingResultsMapping(): WeakMap<RaceData, QualifyingData[]> {
         return this._qualifyingResultsMapping;
     }
+
     get resultsMapping(): WeakMap<RaceData, ResultData[]> {
         return this._resultsMapping;
     }
+
     get qualifyingResults(): QualifyingData[] {
         return this._qualifyingResults;
     }
+
     get results(): ResultData[] {
         return this._results;
     }
+
     get races(): RaceData[] {
         return this._races;
     }
@@ -27,18 +31,31 @@ export default class CombinedHistoryData{
     private _resultsMapping: WeakMap<RaceData, ResultData[]> = new WeakMap<RaceData, ResultData[]>();
     private _qualifyingResultsMapping: WeakMap<RaceData, QualifyingData[]> = new WeakMap<RaceData, QualifyingData[]>();
 
-    constructor(seasonYear: string) {
-        this.seasonYear = seasonYear;
+    public getRaceResultForRace(race: RaceData): ResultData[] {
+        if (!this.readCsvsAlready) {
+            throw Error('readCsvs must be called first')
+        }
+        return this.resultsMapping.get(race)
     }
 
-    public getRaceResultForRace(race: RaceData){ this.resultsMapping.get(race) }
-    public getQualifyingResultForRace(race: RaceData){ this.qualifyingResultsMapping.get(race) }
+    public getQualifyingResultForRace(race: RaceData) {
+        if (!this.readCsvsAlready) {
+            throw Error('readCsvs must be called first')
+        }
+
+        return this.qualifyingResultsMapping.get(race)
+    }
+
+    public getRacesForSeason(seasonYear: string): RaceData[] {
+        return this.races.filter((race) => race.year === this.seasonYear);
+    }
 
 
-    async readCsvs() {
+    public async readCsvs() {
+        console.log('Reading CSVs... - This could take a while');
         if (this.readCsvsAlready) return;
 
-        this._races = (await races.readFile()).filter((race) => race.year === this.seasonYear);
+        this._races = (await races.readFile())
         this._qualifyingResults = await qualifyingData.readFile();
         this._results = await results.readFile();
 
@@ -54,5 +71,6 @@ export default class CombinedHistoryData{
             this._qualifyingResultsMapping.set(race, qualifyingResults);
         }
         this.readCsvsAlready = true;
+        console.log('Reading CSVs done');
     }
 }

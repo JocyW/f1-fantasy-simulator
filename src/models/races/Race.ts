@@ -1,24 +1,29 @@
 import Driver from "../roster/Driver";
 import Qualifying from "./Qualifying";
 import WeekendObject from "../higher/WeekendObject";
-import FinishGenerator from "../../interfaces/FinishGenerator";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
 
-export default class Race extends WeekendObject {
+export default class Race extends WeekendObject implements WithLogger {
 
     public type = 'Race'
 
     static POINTS_MAP = [25, 18, 15, 12, 19, 8, 6, 4, 2, 1];
 
     private _qualifying: Qualifying;
+    public logger: Logger;
+
 
     //TODO: fastest lap
 
     constructor() {
         super();
+        this.logger = new Logger(this.type);
     }
 
     getDriverScore(driver: Driver, forTeam = false): Promise<number> {
+        this.logger.debug('Getting driver score', driver,forTeam)
         return new Promise(resolve => {
             if (!this.qualifying) {
                 throw Error('Race has no qualifying');
@@ -76,6 +81,7 @@ export default class Race extends WeekendObject {
                 throw Error('What the fuck? - Race');
             }
 
+            this.logger.debug('got driver score: ' + score);
             resolve(score);
         })
     }

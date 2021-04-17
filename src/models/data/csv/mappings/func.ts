@@ -16,4 +16,3 @@ export const mapDriverId = (driverId: string, season: string): number => {
     return driver;
 }
 
-export const mapWeirdD
