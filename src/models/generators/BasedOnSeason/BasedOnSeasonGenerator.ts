@@ -1,87 +1,58 @@
 import FinishGenerator from "../../../interfaces/FinishGenerator";
 import HasResults from "../../higher/HasResults";
 import Result from "../../races/Result";
-import races, {RaceData} from "./csv/RacesTable";
-import results, {ResultData, ResultsTable} from './csv/ResultsTable';
-import qualifyingData, {QualifyingData} from "./csv/QualityingsTable";
-import {FinishableData} from "./csv/FinishableData";
+import {RaceData} from "../../data/csv/RacesTable";
+import {ResultsTable} from '../../data/csv/ResultsTable';
+import {FinishableData} from "../../data/csv/FinishableData";
 import Race from "../../races/Race";
 import Qualifying from "../../races/Qualifying";
-import {HISTORY_IDS, mappings} from "./mappings";
+import {HISTORY_IDS} from "../../data/csv/mappings/data";
 import {drivers} from "../../../generate";
+import {mapDriverId} from '../../data/csv/mappings/func';
+import CombinedHistoryData from "../../data/csv/CombinedHistoryData";
 
 export default class BasedOnSeasonGenerator implements FinishGenerator {
 
     private seasonYear: string;
-    private racesData: RaceData[];
-    private resultsData: ResultData[];
-    private qualifyingResults: QualifyingData[];
-    private resultsMapping: WeakMap<RaceData, ResultData[]> = new WeakMap<RaceData, ResultData[]>();
-    private qualifyingResultsMapping: WeakMap<RaceData, QualifyingData[]> = new WeakMap<RaceData, QualifyingData[]>();
-    private raceIndex = 0;
+    private historyData: CombinedHistoryData;
 
-    private readCsvsAlready = false;
+    private raceIndex = 0;
 
     constructor(seasonYear: string) {
         this.seasonYear = seasonYear;
+        this.historyData = new CombinedHistoryData(this.seasonYear);
     }
 
-    async readCsvs() {
-        if (this.readCsvsAlready) return;
+    private getResults(hasResults: HasResults, race: RaceData): FinishableData[] {
+        let mapping: WeakMap<RaceData, FinishableData[]>;
 
-        this.racesData = (await races.readFile()).filter((race) => race.year === this.seasonYear);
-        this.qualifyingResults = await qualifyingData.readFile();
-        this.resultsData = await results.readFile();
-
-        for (let race of this.racesData) {
-            const results = this.resultsData.filter((r) => {
-                return r.raceId === race.raceId
-            });
-            this.resultsMapping.set(race, results);
-
-            const qualifyingResults = this.qualifyingResults.filter((qualifyingResult) => {
-                return qualifyingResult.raceId === race.raceId;
-            });
-            this.qualifyingResultsMapping.set(race, qualifyingResults);
+        if (hasResults instanceof Race) {
+            mapping = this.historyData.resultsMapping;
+        } else if (hasResults instanceof Qualifying) {
+            mapping = this.historyData.qualifyingResultsMapping
+        } else {
+            throw Error('Generate must be called with Race or Qualifying as parameter')
         }
-        this.readCsvsAlready = true;
+        return mapping.get(race);
     }
 
 
     async generate(hasResults: HasResults): Promise<Result[]> {
-        await this.readCsvs();
-        if (this.raceIndex >= this.racesData.length) {
+        await this.historyData.readCsvs();
+
+        if (this.raceIndex >= this.historyData.races.length) {
             this.raceIndex = 0;
             console.log(`More races need to be generated than exist in Season ${this.seasonYear}. Restarting with the first`);
         }
 
         const results: Result[] = [];
-        const race: RaceData = this.racesData[this.raceIndex];
+        const race: RaceData = this.historyData.races[this.raceIndex];
 
-        let mapping: WeakMap<RaceData, FinishableData[]>;
 
-        if (hasResults instanceof Race) {
-            mapping = this.resultsMapping;
-        } else if (hasResults instanceof Qualifying) {
-            mapping = this.qualifyingResultsMapping
-        } else {
-            throw Error('Generate must be called with Race or Qualifying as parameter')
-        }
-        const csvResults = mapping.get(race);
-
+        const csvResults = this.getResults(hasResults, race);
         for (let result of csvResults) {
 
-            const driverMapping = mappings[this.seasonYear];
-
-            if (!driverMapping) {
-                throw Error(`No driver mapping found for season ${this.seasonYear}`)
-            }
-
-            let season2021DriverId = driverMapping[result.driverId];
-
-            if (!season2021DriverId) {
-                throw Error(`Could not find 2021 driver for ${result.driverId}`)
-            }
+            let season2021DriverId = mapDriverId(result.driverId, this.seasonYear);
 
             // FUCKING COVID driver changes...
             const weirdDriverChanges = [drivers.vettel.id, drivers.stroll.id];
@@ -91,11 +62,9 @@ export default class BasedOnSeasonGenerator implements FinishGenerator {
                 }
             }
 
-            if(csvResults.find((finishable) => finishable.driverId === HISTORY_IDS.aitkin) && result.driverId === '847'){
+            if (csvResults.find((finishable) => finishable.driverId === HISTORY_IDS.aitkin) && result.driverId === '847') {
                 season2021DriverId = drivers.hamilton.id;
             }
-
-
 
             const driver = hasResults.drivers.find((driver) => driver.id === season2021DriverId);
 

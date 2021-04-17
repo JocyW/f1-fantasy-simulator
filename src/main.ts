@@ -1,4 +1,4 @@
-import {drivers} from "./generate";
+import {drivers, teams} from "./generate";
 import Roster from "./models/roster/Roster";
 import Calendar from "./models/races/Calendar";
 import rostersJSON from "../assets/brute_force.json";
@@ -13,7 +13,12 @@ const getData = async () => {
     calendar.drivers = Object.values(drivers);
     await calendar.simulate(new BasedOnSeasonGenerator('2020'));
 
-    let bestRosters: {
+    const topRoster = new Roster();
+    topRoster.drivers = [drivers.verstappen, drivers.ricciardo, drivers.tsunoda, drivers.mazepin, drivers.mazepin];
+    topRoster.team = teams.mercedes;
+    topRoster.turboDriver = drivers.ricciardo;
+
+    let results: {
         roster: Roster,
         avgScore: number
     }[] = [];
@@ -21,22 +26,22 @@ const getData = async () => {
     for (let rosterBackupObject of rostersJSON.rosters) {
         const roster = Roster.fromBackupObject(rosterBackupObject);
         const avgScore = await calendar.getScore(roster) / numberOfWeekends;
-
-        if (avgScore > 400) {
-            bestRosters.push({
-                roster,
-                avgScore
-            })
-        }
+        results.push({roster, avgScore})
     }
 
-    for (let bestRoster of bestRosters) {
+    results.sort((a, b) => a.avgScore - b.avgScore);
+    const percentile = results.slice(Math.floor(results.length) * 0.99, results.length - 1)
+
+    const topRosterScore = await calendar.getScore(topRoster) / numberOfWeekends;
+
+    for (let bestRoster of percentile) {
         console.log(
             bestRoster.roster.drivers.map((driver) => driver.lastName),
             bestRoster.roster.team.name,
             bestRoster.roster.turboDriver.lastName,
             bestRoster.avgScore);
     }
-    console.log(bestRosters.length)
+    console.log(percentile.length)
+    console.log(topRosterScore);
 }
 getData()

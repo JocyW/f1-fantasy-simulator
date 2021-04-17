@@ -1,5 +1,5 @@
 import CsvTable from "./CsvTable";
-import makeSingleton from '../../../makeSingleton';
+import makeSingleton from '../../makeSingleton';
 import {FinishableData} from "./FinishableData";
 
 export interface ResultData extends FinishableData{

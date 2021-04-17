@@ -47,7 +47,7 @@ export default class Weekend extends HasDrivers implements Simulateable {
     async getScore(roster: Roster) {
         let score = 0;
         for (let weekendObject of this.weekendObjects) {
-            for (let driver of weekendObject.drivers) {
+            for (let driver of roster.drivers) {
                 let driverScore = await weekendObject.getDriverScore(driver, false);
 
                 if (roster.isTurboDriver(driver)) {
