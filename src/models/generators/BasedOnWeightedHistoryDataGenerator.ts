@@ -4,8 +4,12 @@ import Result from "../races/Result";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import Driver from "../roster/Driver";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
-export default class BasedOnWeightedHistoryDataGenerator extends HasSeasonYear implements FinishGenerator {
+export default class BasedOnWeightedHistoryDataGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
+
+    public logger: Logger;
 
     private prepared = false;
     private historyData: CombinedHistoryData;
@@ -17,9 +21,12 @@ export default class BasedOnWeightedHistoryDataGenerator extends HasSeasonYear i
         super(seasonYear);
 
         this.historyData = new CombinedHistoryData();
+        this.logger = new Logger('BasedOnWeightedHistoryGenerator')
     }
 
+
     async generate(hasResults: HasResults): Promise<Result[]> {
+        this.logger.debug('Generating results');
         await this.prepare(hasResults.drivers);
         return []
     }

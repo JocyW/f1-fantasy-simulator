@@ -11,17 +11,24 @@ import {drivers} from "../../generate";
 import {mapDriverId} from '../data/csv/mappings/func';
 import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
+import WithLogger from "../../interfaces/WithLogger";
+import logger from "../../logger";
+import Logger from "../../logger";
 
-export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator {
+export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
 
     private historyData: CombinedHistoryData;
+
+    public logger: Logger;
 
     private raceIndex = 0;
 
     constructor(seasonYear: string) {
         super(seasonYear)
         this.historyData = new CombinedHistoryData();
+        this.logger = new Logger('BasedOnSeasonGenerator');
     }
+
 
     private getResults(hasResults: HasResults, race: RaceData): FinishableData[] {
         let mapping: WeakMap<RaceData, FinishableData[]>;
@@ -38,6 +45,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
 
 
     async generate(hasResults: HasResults): Promise<Result[]> {
+        this.logger.debug('Generating results');
         await this.historyData.readCsvs();
 
         if (this.raceIndex >= this.historyData.races.length) {

@@ -1,9 +1,18 @@
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import HasResults from "../higher/HasResults";
 import Result from "../races/Result";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
-export default class BasedOnCostGenerator implements FinishGenerator {
+export default class BasedOnCostGenerator implements FinishGenerator, WithLogger {
+    public logger: Logger;
+
+    constructor() {
+        this.logger = new Logger('BasedOnCostGenerator')
+    }
+
     generate(hasResults: HasResults): Promise<Result[]> {
+        this.logger.debug('Generating results');
         return new Promise(((resolve, reject) => {
             let driverArray = [...hasResults.drivers]
             let placeCounter = 1;

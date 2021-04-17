@@ -1,8 +1,17 @@
 import Result from "../races/Result";
 import HasDrivers from "./HasDrivers";
 import Driver from "../roster/Driver";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../../logger";
 
-export default abstract class HasResults extends HasDrivers{
+export default abstract class HasResults extends HasDrivers implements WithLogger{
+
+    public logger: Logger;
+
+    constructor() {
+        super();
+        this.logger = new Logger('HasResults')
+    }
 
     get results(): Result[] {
         return this._results;
@@ -17,8 +26,8 @@ export default abstract class HasResults extends HasDrivers{
         const result = this.results.find((result) => result.driver.id === driverId);
 
         if(!result) {
-            console.log(this.results);
-            throw Error(`No result found for driverId ${driverId}`)
+            this.logger.error(`No result found for driverId ${driverId}`);
+            this.logger.debug(result);
         }
 
         return result;
@@ -28,8 +37,8 @@ export default abstract class HasResults extends HasDrivers{
         const result = this.results.find((result) => result.driver.id !== driver.id && result.driver.team.id === driver.team.id);
 
         if(!result) {
-            console.log(this.results,driver);
-            throw Error(`No teammate result found for driverId ${driver.id}`);
+            this.logger.debug(this.results,driver);
+            this.logger.error(`No teammate result found for driverId ${driver.id}`);
         }
 
         return result

@@ -1,8 +1,10 @@
 import races, {RaceData} from "./RacesTable";
 import results, {ResultData} from "./ResultsTable";
 import qualifyingData, {QualifyingData} from "./QualityingsTable";
+import WithLogger from "../../../interfaces/WithLogger";
+import Logger from "../../../logger";
 
-export default class CombinedHistoryData {
+export default class CombinedHistoryData implements WithLogger {
     get qualifyingResultsMapping(): WeakMap<RaceData, QualifyingData[]> {
         return this._qualifyingResultsMapping;
     }
@@ -31,16 +33,23 @@ export default class CombinedHistoryData {
     private _resultsMapping: WeakMap<RaceData, ResultData[]> = new WeakMap<RaceData, ResultData[]>();
     private _qualifyingResultsMapping: WeakMap<RaceData, QualifyingData[]> = new WeakMap<RaceData, QualifyingData[]>();
 
+    public logger: Logger;
+
+    constructor() {
+        this.logger = new Logger('CombinedHistoryData');
+    }
+
+
     public getRaceResultForRace(race: RaceData): ResultData[] {
         if (!this.readCsvsAlready) {
-            throw Error('readCsvs must be called first')
+            this.logger.error('readCsvs must be called first')
         }
         return this.resultsMapping.get(race)
     }
 
     public getQualifyingResultForRace(race: RaceData) {
         if (!this.readCsvsAlready) {
-            throw Error('readCsvs must be called first')
+            this.logger.error('readCsvs must be called first')
         }
 
         return this.qualifyingResultsMapping.get(race)
@@ -52,7 +61,7 @@ export default class CombinedHistoryData {
 
 
     public async readCsvs() {
-        console.log('Reading CSVs... - This could take a while');
+        this.logger.info('Reading CSVs...');
         if (this.readCsvsAlready) return;
 
         this._races = (await races.readFile())
@@ -71,6 +80,6 @@ export default class CombinedHistoryData {
             this._qualifyingResultsMapping.set(race, qualifyingResults);
         }
         this.readCsvsAlready = true;
-        console.log('Reading CSVs done');
+        this.logger.info('Reading CSVs done');
     }
 }
