@@ -24,20 +24,20 @@ export default class Calendar extends HasDrivers implements Simulateable, Scorea
         }
     }
 
-    simulate(generator: FinishGenerator): void {
+    async simulate(generator: FinishGenerator): Promise<void> {
         for(let weekend of this.weekends){
 
             if(!weekend.drivers.length)
                 weekend.drivers = this.drivers;
 
-            weekend.simulate(generator);
+            await weekend.simulate(generator);
         }
     }
 
-    getScore(roster: Roster): number {
+    async getScore(roster: Roster): Promise<number> {
         let score = 0;
         for(let weekend of this.weekends){
-            score += weekend.getScore(roster);
+            score += await weekend.getScore(roster);
         }
         return score;
     }

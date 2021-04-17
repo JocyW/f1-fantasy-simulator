@@ -1,18 +1,22 @@
 import fs from 'fs';
 import csv from 'csv-parser'
 
-export default abstract class CsvTable{
+export default abstract class CsvTable<T>{
     abstract path: string;
-    abstract data: { [headers: string]: string | number | Date }[] = [];
+    data: T[] = [];
 
-    readFile(): Promise<{ [headers: string]: string | number | Date }[]> {
+    readFile(): Promise<T[]> {
         return new Promise((resolve, reject) => {
+
+            if(!this.path){
+                reject(Error('No path for CSV file specified'))
+            }
 
             if (this.data.length > 0) {
                 resolve(this.data)
             }
 
-            fs.createReadStream('data.csv').pipe(csv())
+            fs.createReadStream(this.path).pipe(csv())
                 .on('data', (data) => {
                     this.data.push(data)
                 })

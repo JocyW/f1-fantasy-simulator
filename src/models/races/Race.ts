@@ -18,61 +18,66 @@ export default class Race extends WeekendObject {
         super();
     }
 
-    getDriverScore(driver: Driver, forTeam = false): number {
-
-        if(!this.qualifying){
-            throw Error('Race has no qualifying');
-        }
-
-        // Finished race
-        //TODO: change when DNF implemented
-        let score = 1;
-
-        const raceResult = this.findResultByDriverId(driver.id)
-        const qualiResult = this.qualifying.findResultByDriverId(driver.id);
-
-        // Positions gained in race
-        const resultDiff = qualiResult.place - raceResult.place;
-        if (resultDiff > 0) {
-            if (resultDiff > 10) {
-                score += 10;
-            } else {
-                score += resultDiff
-            }
-        }
-
-        if (!forTeam) {
-            // Finished ahead of team mate
-            if (raceResult.place < this.findTeammateResult(driver).place) {
-                score += 3;
-            }
-            //TODO: fastest lap
-        }
-
-        // Started race within Top 10, finished race but lost position (per place lost, max. -10 pts)
-        // Started race outside Top 10, finished race but lost position (per place lost, max. -5 pts)
-        let difference = (raceResult.place - qualiResult.place);
-
-        if (difference > 0) {
-            const modifier = qualiResult.place > 10 ? -1 : -2;
-
-            if (difference > 5) {
-                difference = 5;
+    getDriverScore(driver: Driver, forTeam = false): Promise<number> {
+        return new Promise(resolve => {
+            if (!this.qualifying) {
+                throw Error('Race has no qualifying');
             }
 
-            score += difference * modifier;
-        }
-        //TODO: DNF + Disqualification
+            // Finished race
+            //TODO: change when DNF implemented
+            let score = 1;
 
-        if (raceResult.place <= Race.POINTS_MAP.length) {
-            score += Race.POINTS_MAP[raceResult.place - 1];
-        }
+            const raceResult = this.findResultByDriverId(driver.id)
+            const qualiResult = this.qualifying.findResultByDriverId(driver.id);
 
-        return score;
-    }
+            if(raceResult.place > 0){
+            // Positions gained in race
+            const resultDiff = qualiResult.place - raceResult.place;
+            if (resultDiff > 0) {
+                if (resultDiff > 10) {
+                    score += 10;
+                } else {
+                    score += resultDiff
+                }
+            }
 
-    simulate(generator: FinishGenerator): void {
-        this.results = generator.generate(this);
+            if (!forTeam) {
+                // Finished ahead of team mate
+                if (raceResult.place < this.findTeammateResult(driver).place) {
+                    score += 3;
+                }
+                //TODO: fastest lap
+            }
+
+            // Started race within Top 10, finished race but lost position (per place lost, max. -10 pts)
+            // Started race outside Top 10, finished race but lost position (per place lost, max. -5 pts)
+            let difference = (raceResult.place - qualiResult.place);
+
+            if (difference > 0) {
+                const modifier = qualiResult.place > 10 ? -1 : -2;
+
+                if (difference > 5) {
+                    difference = 5;
+                }
+
+                score += difference * modifier;
+            }
+            //TODO: DNF + Disqualification
+
+            if (raceResult.place <= Race.POINTS_MAP.length) {
+                score += Race.POINTS_MAP[raceResult.place - 1];
+            }
+
+            }
+
+            if(isNaN(score)){
+                console.log(driver,forTeam, raceResult);
+                throw Error('What the fuck? - Race');
+            }
+
+            resolve(score);
+        })
     }
 
     get qualifying(): Qualifying {

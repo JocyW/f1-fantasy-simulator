@@ -14,10 +14,24 @@ export default abstract class HasResults extends HasDrivers{
     private _results: Result[] = [];
 
     findResultByDriverId(driverId: number): Result{
-        return this.results.find((result) => result.driver.id === driverId);
+        const result = this.results.find((result) => result.driver.id === driverId);
+
+        if(!result) {
+            console.log(this.results);
+            throw Error(`No result found for driverId ${driverId}`)
+        }
+
+        return result;
     }
 
     findTeammateResult(driver: Driver): Result{
-        return this.results.find((result) => result.driver.id !== driver.id && result.driver.team.id === driver.team.id)
+        const result = this.results.find((result) => result.driver.id !== driver.id && result.driver.team.id === driver.team.id);
+
+        if(!result) {
+            console.log(this.results,driver);
+            throw Error(`No teammate result found for driverId ${driver.id}`);
+        }
+
+        return result
     }
 }
