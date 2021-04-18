@@ -12,4 +12,9 @@ export default class Driver extends HasCost {
         this.lastName = props.lastName;
         this.team = props.team;
     }
+
+    static findById(drivers: Driver[], driverId: number) {
+        //TODO: convert to O(1)
+        return drivers.find((driver) => driver.id === driverId)
+    }
 }

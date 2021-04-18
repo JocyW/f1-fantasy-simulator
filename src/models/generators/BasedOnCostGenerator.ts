@@ -1,45 +1,33 @@
 import FinishGenerator from "../../interfaces/FinishGenerator";
-import HasResults from "../higher/HasResults";
 import Result from "../races/Result";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../../logger";
+import WeekendObject from "../higher/WeekendObject";
+import Driver from "../roster/Driver";
+import BasedOnWeightsGenerator from "./BasedOnWeightsGenerator/BasedOnWeightsGenerator";
+import WeightMap from "./BasedOnWeightsGenerator/WeightMap";
 
 export default class BasedOnCostGenerator implements FinishGenerator, WithLogger {
     public logger: Logger;
+    private generatorMap: WeakMap<Driver[], BasedOnWeightsGenerator> = new WeakMap()
 
     constructor() {
         this.logger = new Logger('BasedOnCostGenerator')
     }
 
-    generate(hasResults: HasResults): Promise<Result[]> {
+    async generate(weekendObject: WeekendObject): Promise<Result[]> {
         this.logger.debug('Generating results');
-        return new Promise(((resolve, reject) => {
-            let driverArray = [...hasResults.drivers]
-            let placeCounter = 1;
-            const res = [];
-
-            do {
-                let costSum = 0;
-                const accArray = [];
-                for (let driver of driverArray) {
-                    costSum += driver.cost;
-                    accArray.push(driver.cost + (accArray.length ? accArray[accArray.length - 1] : 0))
-                }
-
-                const rand = Math.random() * costSum;
-
-                let index = accArray.findIndex((n) => rand <= n);
-
-                res.push(new Result({
-                    place: placeCounter,
-                    driver: driverArray[index]
-                }));
-
-                driverArray.splice(index, 1);
-                placeCounter++;
-            } while (driverArray.length > 0)
-
-            resolve(res);
-        }))
+        const generator = this.generatorMap.get(weekendObject.drivers);
+        if (generator) {
+            return await generator.generate(weekendObject)
+        } else {
+            const weightMap = weekendObject.drivers.map((driver) => {
+                return new WeightMap({
+                    driver: driver,
+                    weight: driver.cost
+                });
+            });
+            this.generatorMap.set(weekendObject.drivers, new BasedOnWeightsGenerator(weightMap))
+        }
     }
 }

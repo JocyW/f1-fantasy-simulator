@@ -13,6 +13,7 @@ import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../../logger";
+import WeekendObject from "../higher/WeekendObject";
 
 export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
 
@@ -26,7 +27,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
         this.logger = new Logger('BasedOnSeasonGenerator');
     }
 
-    async generate(hasResults: HasResults): Promise<Result[]> {
+    async generate(weekendObject: WeekendObject): Promise<Result[]> {
         this.logger.debug('Generating results');
         await this.historyData.readCsvs();
 
@@ -39,7 +40,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
         const race: RaceData = this.historyData.getRacesForSeason(this.seasonYear)[this.raceIndex];
 
 
-        const csvResults = this.getResults(hasResults, race);
+        const csvResults = this.getResults(weekendObject, race);
         for (let result of csvResults) {
 
             let season2021DriverId = mapDriverId(result.driverId, this.seasonYear);
@@ -56,7 +57,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
                 season2021DriverId = drivers.hamilton.id;
             }
 
-            const driver = hasResults.drivers.find((driver) => driver.id === season2021DriverId);
+            const driver = weekendObject.drivers.find((driver) => driver.id === season2021DriverId);
 
             if (!driver) {
                 throw Error(`Could not find driver with id ${season2021DriverId}`)

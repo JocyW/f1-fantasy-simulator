@@ -3,6 +3,9 @@ import results, {ResultData} from "./ResultsTable";
 import qualifyingData, {QualifyingData} from "./QualityingsTable";
 import WithLogger from "../../../interfaces/WithLogger";
 import Logger from "../../../logger";
+import Qualifying from "../../races/Qualifying";
+import Race from "../../races/Race";
+import WeekendObject from "../../higher/WeekendObject";
 
 export default class CombinedHistoryData implements WithLogger {
     public logger: Logger;
@@ -60,6 +63,16 @@ export default class CombinedHistoryData implements WithLogger {
 
     public getRacesForSeason(seasonYear: string): RaceData[] {
         return this.races.filter((race) => race.year === this.seasonYear);
+    }
+
+    public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData) {
+        if (weekendObject instanceof Race || weekendObject === Race) {
+            return this.getRaceResultForRace(race);
+        } else if (weekendObject instanceof Qualifying || weekendObject || Qualifying) {
+            return this.getQualifyingResultForRace(race)
+        } else {
+            this.logger.error('WeekendObject is not supported ', weekendObject);
+        }
     }
 
 

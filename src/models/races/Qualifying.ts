@@ -13,7 +13,6 @@ export default class Qualifying extends WeekendObject implements WithLogger {
         this.logger = new Logger(this.type);
     }
 
-
     getDriverScore(driver: Driver, forTeam = false): Promise<number> {
         this.logger.debug('Getting driver score', driver, forTeam)
         return new Promise(resolve => {
