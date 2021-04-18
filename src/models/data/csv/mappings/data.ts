@@ -32,7 +32,7 @@ export const CSV_DRIVER_IDS = {
     mazepin: '853'
 }
 
-const season2020To2021Mapping = {
+export const season2020To2021Mapping = {
     [CSV_DRIVER_IDS.hamilton]: drivers.hamilton.id,
     [CSV_DRIVER_IDS.verstappen_1]: drivers.verstappen.id,
     [CSV_DRIVER_IDS.verstappen_2]: drivers.verstappen.id,
@@ -60,7 +60,7 @@ const season2020To2021Mapping = {
     [CSV_DRIVER_IDS.hulkenberg]: drivers.stroll.id
 }
 
-const season2021To2021Mapping = {
+export const season2021To2021Mapping = {
     [CSV_DRIVER_IDS.hamilton]: drivers.hamilton.id,
     [CSV_DRIVER_IDS.verstappen_1]: drivers.verstappen.id,
     [CSV_DRIVER_IDS.verstappen_2]: drivers.verstappen.id,

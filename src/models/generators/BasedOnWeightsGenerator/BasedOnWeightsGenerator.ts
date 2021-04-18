@@ -9,47 +9,39 @@ export default class BasedOnWeightsGenerator implements FinishGenerator, WithLog
     public logger: Logger;
     private weightMaps: WeightMap[];
     private prepared = false;
-    private totalWeights = 0;
 
     constructor(weights: WeightMap[]) {
         this.weightMaps = weights;
+        this.logger = new Logger('BasedOnWeightsGenerator')
+        this.logger.debug('ctr',weights);
     }
 
     async generate(weekendObject: WeekendObject): Promise<Result[]> {
-        await this.prepare();
-
         let copiedWeights = [...this.weightMaps];
-        let copiedTotal = this.totalWeights;
+        let totalWeights;
         let placeCounter = 1;
         const res = [];
 
-
         do {
-            const rand = Math.random() * copiedTotal;
+            totalWeights = 0;
+            for (let weightMap of copiedWeights) {
+                weightMap.cumulativeWeight = totalWeights += weightMap.weight;
+            }
+
+            const rand = Math.random() * totalWeights;
 
             let weightMap = copiedWeights.find((weightMap) => rand <= weightMap.cumulativeWeight);
-
+            this.logger.debug('weightMap',weightMap,copiedWeights);
             res.push(new Result({
                 place: placeCounter,
                 driver: weightMap.driver
             }));
 
-            copiedWeights = copiedWeights.splice(copiedWeights.indexOf(weightMap), 1);
-            copiedTotal -= weightMap.weight;
+            copiedWeights.splice(copiedWeights.indexOf(weightMap), 1);
             placeCounter++;
         } while (copiedWeights.length > 0)
 
         return res;
-    }
-
-    private async prepare() {
-        if (this.prepared) return;
-
-        for (let weightMap of this.weightMaps) {
-            weightMap.cumulativeWeight = this.totalWeights += weightMap.weight;
-        }
-
-        this.prepared = true;
     }
 
 

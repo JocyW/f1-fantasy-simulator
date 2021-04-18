@@ -11,7 +11,7 @@ const getData = async () => {
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.drivers = Object.values(drivers);
-    await calendar.simulate(new BasedOnWeightedHistoryDataGenerator('2020'));
+    await calendar.simulate(new BasedOnWeightedHistoryDataGenerator(['2020','2021']));
 
     const topRoster = new Roster();
     topRoster.drivers = [drivers.verstappen, drivers.ricciardo, drivers.tsunoda, drivers.mazepin, drivers.mazepin];

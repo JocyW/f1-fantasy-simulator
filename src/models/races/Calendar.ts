@@ -31,14 +31,17 @@ export default class Calendar extends HasDrivers implements Simulateable, Scorea
     }
 
     async simulate(generator: FinishGenerator): Promise<void> {
-        this.logger.debug(`Simulating`);
+
+        let count = 1;
         for (let weekend of this.weekends) {
             this.logger.debug(`Simulating weekend`, weekend);
+            this.logger.info(`Simulating weekend (${count}/${this.weekends.length})`);
 
             if (!weekend.drivers.length)
                 weekend.drivers = this.drivers;
 
             await weekend.simulate(generator);
+            count++;
         }
     }
 

@@ -9,7 +9,6 @@ import WeekendObject from "../../higher/WeekendObject";
 
 export default class CombinedHistoryData implements WithLogger {
     public logger: Logger;
-    private seasonYear: string;
     private readCsvsAlready = false;
 
     constructor() {
@@ -62,13 +61,15 @@ export default class CombinedHistoryData implements WithLogger {
     }
 
     public getRacesForSeason(seasonYear: string): RaceData[] {
-        return this.races.filter((race) => race.year === this.seasonYear);
+        return this.races.filter((race) => race.year === seasonYear);
     }
 
     public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData) {
         if (weekendObject instanceof Race || weekendObject === Race) {
+            this.logger.debug('getting results for race');
             return this.getRaceResultForRace(race);
         } else if (weekendObject instanceof Qualifying || weekendObject || Qualifying) {
+            this.logger.debug('getting results for qualifying');
             return this.getQualifyingResultForRace(race)
         } else {
             this.logger.error('WeekendObject is not supported ', weekendObject);
