@@ -15,24 +15,19 @@ import {season2021To2021Mapping} from "../data/csv/mappings/data";
 
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger {
 
+    static supportedWeekendObjects = [Qualifying, Race];
+    static baseWeight = 1000;
+    static baseChange = 100;
     public logger: Logger;
-
     private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
     private prepared = false;
     private historyData: CombinedHistoryData;
-
     private qualiWeights: WeightMap[] = [];
     private raceWeights: WeightMap[] = [];
-
     private weights = new Map([
         [Qualifying, this.qualiWeights],
         [Race, this.raceWeights]
     ]);
-
-
-    static supportedWeekendObjects = [Qualifying, Race];
-    static baseWeight = 1000;
-    static baseChange = 100;
     private seasonYears: string[];
 
     constructor(seasonYears: string[]) {

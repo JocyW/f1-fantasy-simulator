@@ -10,6 +10,16 @@ export type RosterBackupObject = {
 
 export default class Roster {
 
+    constructor(props?: { drivers: [Driver, Driver, Driver, Driver, Driver], team: Team, turboDriver: Driver }) {
+
+        if (props?.drivers?.length)
+            this.drivers = props?.drivers;
+        if (props?.team)
+            this.team = props?.team;
+        if (props?.turboDriver)
+            this.turboDriver = props.turboDriver;
+    }
+
     private _drivers: [Driver, Driver, Driver, Driver, Driver];
 
     get drivers(): [Driver, Driver, Driver, Driver, Driver] {
@@ -61,17 +71,6 @@ export default class Roster {
             + this.team.id
         ).toString() + this.turboDriver.id;
     }
-
-    constructor(props?: { drivers: [Driver, Driver, Driver, Driver, Driver], team: Team, turboDriver: Driver }) {
-
-        if(props?.drivers?.length)
-        this.drivers = props?.drivers;
-        if(props?.team)
-        this.team = props?.team;
-        if(props?.turboDriver)
-        this.turboDriver = props.turboDriver;
-    }
-
 
     static fromBackupObject(object: RosterBackupObject): Roster {
 

@@ -1,7 +1,6 @@
 import {drivers, teams} from "./generate";
 import Roster from "./models/roster/Roster";
 import Calendar from "./models/races/Calendar";
-import rostersJSON from "../assets/brute_force.json";
 import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
 
@@ -19,7 +18,7 @@ const getData = async () => {
     topRoster.team = teams.mercedes;
     topRoster.turboDriver = drivers.ricciardo;
 
-    jocysLeague.addEntry('Jocy',topRoster);
+    jocysLeague.addEntry('Jocy', topRoster);
 
     jocysLeague.calendar = calendar;
     await jocysLeague.getScore(null);

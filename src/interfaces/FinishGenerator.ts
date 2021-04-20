@@ -1,4 +1,3 @@
-import HasResults from "../models/higher/HasResults";
 import Result from "../models/races/Result";
 import WeekendObject from "../models/higher/WeekendObject";
 
