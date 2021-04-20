@@ -113,12 +113,12 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                         }
                     }
                 }
+                weight *= 1.5
             }
             weight *= 2;
         }
 
         for (let object of BasedOnWeightedHistoryDataGenerator.supportedWeekendObjects) {
-            console.log(this.weights.get(object));
             this.generators.set(object, new BasedOnWeightsGenerator(this.weights.get(object)))
         }
 

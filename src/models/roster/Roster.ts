@@ -62,6 +62,17 @@ export default class Roster {
         ).toString() + this.turboDriver.id;
     }
 
+    constructor(props?: { drivers: [Driver, Driver, Driver, Driver, Driver], team: Team, turboDriver: Driver }) {
+
+        if(props?.drivers?.length)
+        this.drivers = props?.drivers;
+        if(props?.team)
+        this.team = props?.team;
+        if(props?.turboDriver)
+        this.turboDriver = props.turboDriver;
+    }
+
+
     static fromBackupObject(object: RosterBackupObject): Roster {
 
         const driversArray = Object.values(drivers);
