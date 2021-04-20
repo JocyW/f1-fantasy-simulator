@@ -1,7 +1,7 @@
 import Driver from "../roster/Driver";
 import WeekendObject from "../higher/WeekendObject";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 
 export default class Qualifying extends WeekendObject implements WithLogger {
 

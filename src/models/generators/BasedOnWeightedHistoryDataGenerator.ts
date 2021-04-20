@@ -3,7 +3,7 @@ import Result from "../races/Result";
 import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import Driver from "../roster/Driver";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 import Qualifying from "../races/Qualifying";
 import Race from "../races/Race";
 import WeekendObject from "../higher/WeekendObject";

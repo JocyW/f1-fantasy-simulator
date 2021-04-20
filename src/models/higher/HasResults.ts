@@ -2,7 +2,7 @@ import Result from "../races/Result";
 import HasDrivers from "./HasDrivers";
 import Driver from "../roster/Driver";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 
 export default abstract class HasResults extends HasDrivers implements WithLogger {
 

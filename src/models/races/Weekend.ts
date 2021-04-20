@@ -6,7 +6,7 @@ import HasDrivers from "../higher/HasDrivers";
 import WeekendObject from "../higher/WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 
 export default class Weekend extends HasDrivers implements Simulateable, WithLogger {
 

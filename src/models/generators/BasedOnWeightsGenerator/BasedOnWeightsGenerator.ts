@@ -1,6 +1,6 @@
 import FinishGenerator from "../../../interfaces/FinishGenerator";
 import WithLogger from "../../../interfaces/WithLogger";
-import Logger from "../../../logger";
+import Logger from "../../Logger";
 import WeekendObject from "../../higher/WeekendObject";
 import Result from "../../races/Result";
 import WeightMap from "./WeightMap";

@@ -2,7 +2,7 @@ import races, {RaceData} from "./RacesTable";
 import results, {ResultData} from "./ResultsTable";
 import qualifyingData, {QualifyingData} from "./QualityingsTable";
 import WithLogger from "../../../interfaces/WithLogger";
-import Logger from "../../../logger";
+import Logger from "../../Logger";
 import Qualifying from "../../races/Qualifying";
 import Race from "../../races/Race";
 import WeekendObject from "../../higher/WeekendObject";

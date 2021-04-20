@@ -1,5 +1,5 @@
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 import Roster from "./Roster";
 import Calendar from "../races/Calendar";
 import Scoreable from "../../interfaces/Scoreable";

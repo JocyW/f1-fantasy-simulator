@@ -12,7 +12,7 @@ import {mapDriverId} from '../data/csv/mappings/func';
 import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 import WeekendObject from "../higher/WeekendObject";
 
 export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {

@@ -5,7 +5,7 @@ import Scoreable from "../../interfaces/Scoreable";
 import Roster from "../roster/Roster";
 import HasDrivers from "../higher/HasDrivers";
 import WithLogger from "../../interfaces/WithLogger";
-import Logger from "../../logger";
+import Logger from "../Logger";
 
 export default class Calendar extends HasDrivers implements Simulateable, Scoreable, WithLogger {
     public logger: Logger;
