@@ -1,7 +1,7 @@
 import FinishGenerator from "../../../interfaces/FinishGenerator";
 import WithLogger from "../../../interfaces/WithLogger";
 import Logger from "../../Logger";
-import WeekendObject from "../../higher/WeekendObject";
+import WeekendObject from "../../races/WeekendObject";
 import Result from "../../races/Result";
 import WeightMap from "./WeightMap";
 

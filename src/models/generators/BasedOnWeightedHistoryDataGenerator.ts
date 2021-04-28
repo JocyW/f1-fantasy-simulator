@@ -6,7 +6,7 @@ import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
 import Qualifying from "../races/Qualifying";
 import Race from "../races/Race";
-import WeekendObject from "../higher/WeekendObject";
+import WeekendObject from "../races/WeekendObject";
 import BasedOnWeightsGenerator from "./BasedOnWeightsGenerator/BasedOnWeightsGenerator";
 import WeightMap from "./BasedOnWeightsGenerator/WeightMap";
 import {ResultsTable} from "../data/csv/ResultsTable";

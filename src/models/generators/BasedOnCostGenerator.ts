@@ -2,7 +2,7 @@ import FinishGenerator from "../../interfaces/FinishGenerator";
 import Result from "../races/Result";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
-import WeekendObject from "../higher/WeekendObject";
+import WeekendObject from "../races/WeekendObject";
 import Driver from "../roster/Driver";
 import BasedOnWeightsGenerator from "./BasedOnWeightsGenerator/BasedOnWeightsGenerator";
 import WeightMap from "./BasedOnWeightsGenerator/WeightMap";

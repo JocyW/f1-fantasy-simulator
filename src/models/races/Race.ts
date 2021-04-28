@@ -1,6 +1,6 @@
 import Driver from "../roster/Driver";
 import Qualifying from "./Qualifying";
-import WeekendObject from "../higher/WeekendObject";
+import WeekendObject from "./WeekendObject";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
 

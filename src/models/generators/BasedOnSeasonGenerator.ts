@@ -13,7 +13,7 @@ import CombinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
-import WeekendObject from "../higher/WeekendObject";
+import WeekendObject from "../races/WeekendObject";
 
 export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
 

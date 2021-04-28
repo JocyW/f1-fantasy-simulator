@@ -3,12 +3,14 @@ import Race from "./Race";
 import Simulateable from "../../interfaces/Simulateable";
 import Roster from "../roster/Roster";
 import HasDrivers from "../higher/HasDrivers";
-import WeekendObject from "../higher/WeekendObject";
+import WeekendObject from "./WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
+import Exportable from "../../interfaces/Exportable";
+import Exporter from "../exporter/Exporter";
 
-export default class Weekend extends HasDrivers implements Simulateable, WithLogger {
+export default class Weekend extends HasDrivers implements Simulateable, WithLogger, Exportable {
 
     public logger: Logger;
 
@@ -39,6 +41,9 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
         for (let weekendObject of this.weekendObjects) {
             if (!weekendObject.drivers.length)
                 weekendObject.drivers = this.drivers;
+
+            if (this.exporter)
+                weekendObject.exporter = this.exporter;
 
             if (!weekendObject.drivers.length)
                 throw Error('Drivers needed to start simulation for weekendobject ' + JSON.stringify(weekendObject));
@@ -74,4 +79,6 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
         }
         return score;
     }
+
+    exporter: Exporter;
 }

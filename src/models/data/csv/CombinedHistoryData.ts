@@ -5,7 +5,7 @@ import WithLogger from "../../../interfaces/WithLogger";
 import Logger from "../../Logger";
 import Qualifying from "../../races/Qualifying";
 import Race from "../../races/Race";
-import WeekendObject from "../../higher/WeekendObject";
+import WeekendObject from "../../races/WeekendObject";
 
 export default class CombinedHistoryData implements WithLogger {
     public logger: Logger;
