@@ -11,6 +11,7 @@ import Exporter from "../exporter/Exporter";
 
 export default class Calendar extends HasDrivers implements Simulateable, Scoreable, WithLogger, WithExporter {
     public logger: Logger;
+    exporter: Exporter;
 
     constructor(numberOfWeekends: number) {
         super();
@@ -58,7 +59,5 @@ export default class Calendar extends HasDrivers implements Simulateable, Scorea
         }
         return score;
     }
-
-    exporter: Exporter;
 
 }

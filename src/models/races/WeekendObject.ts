@@ -10,10 +10,9 @@ import Exportable from "../../interfaces/Exportable";
 export default abstract class WeekendObject extends HasResults implements Simulateable, WithExporter, Exportable {
 
     abstract type: string;
+    exporter: Exporter;
 
     abstract getDriverScore(driver: Driver, isTeam: boolean): Promise<number>
-
-    exporter: Exporter;
 
     async simulate(generator: FinishGenerator): Promise<Result[]> {
         this.results = await generator.generate(this);
@@ -34,7 +33,7 @@ export default abstract class WeekendObject extends HasResults implements Simula
                 driverTeamId: result.driver.team.id,
                 place: result.place
             }
-        }).sort((resultLikeA,resultLikeB) => resultLikeA.place - resultLikeB.place)
+        }).sort((resultLikeA, resultLikeB) => resultLikeA.place - resultLikeB.place)
     }
 
     getExportName(): string {

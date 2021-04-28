@@ -13,6 +13,7 @@ import Exporter from "../exporter/Exporter";
 export default class Weekend extends HasDrivers implements Simulateable, WithLogger, WithExporter {
 
     public logger: Logger;
+    exporter: Exporter;
 
     constructor() {
         super();
@@ -79,6 +80,4 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
         }
         return score;
     }
-
-    exporter: Exporter;
 }

@@ -11,7 +11,7 @@ export default class CsvExporter extends Exporter {
     private basePath: string;
     private nameGenerator: Generator<any>
 
-    constructor(props: { basePath: string}) {
+    constructor(props: { basePath: string }) {
         super();
 
         this.basePath = props.basePath;

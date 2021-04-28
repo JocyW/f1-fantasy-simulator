@@ -1,4 +1,5 @@
-export default interface Exportable{
+export default interface Exportable {
     getExportData(): object[]
+
     getExportName(): string
 }

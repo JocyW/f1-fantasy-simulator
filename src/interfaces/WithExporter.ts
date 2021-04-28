@@ -1,5 +1,5 @@
 import Exporter from "../models/exporter/Exporter";
 
-export default interface WithExporter{
+export default interface WithExporter {
     exporter: Exporter;
 }

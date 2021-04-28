@@ -1,6 +1,6 @@
 export default function* countGenerator(): Generator<any> {
     let i = 0;
-    while(true){
+    while (true) {
         yield ++i;
     }
 }

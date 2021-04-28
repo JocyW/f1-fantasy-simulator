@@ -19,13 +19,12 @@ export class LeagueEntry {
 }
 
 export default class League implements WithLogger, Scoreable, WithExporter, Exportable {
-    logger: Logger;
-
     static type = 'League';
-
+    logger: Logger;
     public name: string;
     public entries: LeagueEntry[] = [];
     public calendar: Calendar;
+    exporter: Exporter;
 
     constructor() {
         this.logger = new Logger(League.type);
@@ -43,8 +42,6 @@ export default class League implements WithLogger, Scoreable, WithExporter, Expo
     getExportName(): string {
         return League.type
     }
-
-    exporter: Exporter;
 
     addEntry(name: string, roster: Roster) {
         this.entries.push(new LeagueEntry({name, roster}))
