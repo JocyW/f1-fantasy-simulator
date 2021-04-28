@@ -7,10 +7,10 @@ import WeekendObject from "./WeekendObject";
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
-import Exportable from "../../interfaces/Exportable";
+import WithExporter from "../../interfaces/WithExporter";
 import Exporter from "../exporter/Exporter";
 
-export default class Weekend extends HasDrivers implements Simulateable, WithLogger, Exportable {
+export default class Weekend extends HasDrivers implements Simulateable, WithLogger, WithExporter {
 
     public logger: Logger;
 

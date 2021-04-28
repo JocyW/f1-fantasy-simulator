@@ -6,10 +6,10 @@ import Roster from "../roster/Roster";
 import HasDrivers from "../higher/HasDrivers";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
-import Exportable from "../../interfaces/Exportable";
+import WithExporter from "../../interfaces/WithExporter";
 import Exporter from "../exporter/Exporter";
 
-export default class Calendar extends HasDrivers implements Simulateable, Scoreable, WithLogger, Exportable {
+export default class Calendar extends HasDrivers implements Simulateable, Scoreable, WithLogger, WithExporter {
     public logger: Logger;
 
     constructor(numberOfWeekends: number) {

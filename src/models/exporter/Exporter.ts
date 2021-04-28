@@ -1,3 +1,5 @@
+import Exportable from "../../interfaces/Exportable";
+
 export default abstract class Exporter{
-    abstract export(data: object[])
+    abstract export(exportable: Exportable)
 }
