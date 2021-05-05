@@ -64,7 +64,8 @@ export default class League implements WithLogger, Scoreable, WithExporter, Expo
             this.logger.info(entry.name, entry.score);
         }
 
-        this.exporter.export(this);
+        if (this.exporter)
+            this.exporter.export(this);
 
         return totalScore;
     }

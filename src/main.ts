@@ -4,6 +4,7 @@ import Calendar from "./models/races/Calendar";
 import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
 import CsvExporter from "./models/exporter/CsvExporter";
+import rostersJSON from "../assets/brute_force.json";
 
 export const DEBUG_ENABLED = false;
 
@@ -15,20 +16,35 @@ const getData = async () => {
         basePath: './dist/exports/weekend_object',
     })
     calendar.drivers = Object.values(drivers);
-    await calendar.simulate(new BasedOnWeightedHistoryDataGenerator(['2020', '2021']));
 
-    const topRoster = new Roster();
-    topRoster.drivers = [drivers.verstappen, drivers.ricciardo, drivers.tsunoda, drivers.mazepin, drivers.mazepin];
-    topRoster.team = teams.mercedes;
-    topRoster.turboDriver = drivers.ricciardo;
+    const generator = new BasedOnWeightedHistoryDataGenerator(['2020', '2021']);
+    generator.exporter = new CsvExporter({
+        basePath: './dist/exports'
+    })
 
-    jocysLeague.addEntry('Jocy', topRoster);
-    jocysLeague.exporter = new CsvExporter({
-        basePath: './dist/exports',
-    });
+    await calendar.simulate(generator);
 
-    jocysLeague.calendar = calendar;
-    await jocysLeague.getScore(null);
+    let results: {
+        roster: Roster,
+        avgScore: number
+    }[] = [];
 
+    for (let rosterBackupObject of rostersJSON.rosters) {
+        const roster = Roster.fromBackupObject(rosterBackupObject);
+        const avgScore = await calendar.getScore(roster) / numberOfWeekends;
+        results.push({roster, avgScore})
+    }
+
+    results.sort((a, b) => a.avgScore - b.avgScore);
+    const percentile = results.slice(Math.floor(results.length) * 0.99, results.length - 1)
+
+    for (let bestRoster of percentile) {
+        console.log(
+            bestRoster.roster.drivers.map((driver) => driver.lastName),
+            bestRoster.roster.team.name,
+            bestRoster.roster.turboDriver.lastName,
+            bestRoster.avgScore);
+    }
+    console.log(percentile.length)
 }
 getData()

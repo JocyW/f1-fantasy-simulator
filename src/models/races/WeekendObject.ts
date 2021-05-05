@@ -6,8 +6,12 @@ import Result from "./Result";
 import WithExporter from "../../interfaces/WithExporter";
 import Exporter from "../exporter/Exporter";
 import Exportable from "../../interfaces/Exportable";
+import Qualifying from "./Qualifying";
+import Race from "./Race";
 
 export default abstract class WeekendObject extends HasResults implements Simulateable, WithExporter, Exportable {
+
+    static SUPPORTED_CLASSES = [Race,Qualifying]
 
     abstract type: string;
     exporter: Exporter;
