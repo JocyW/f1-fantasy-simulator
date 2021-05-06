@@ -14,12 +14,13 @@ import {season2021To2021Mapping} from "../data/csv/mappings/data";
 import WithExporter from "../../interfaces/WithExporter";
 import Exportable from "../../interfaces/Exportable";
 import Exporter from "../exporter/Exporter";
+import SUPPORTED_CLASSES from "../races/supportedWeekendObjects";
 
 
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger, WithExporter, Exportable {
 
-    static baseWeight = 1000;
-    static baseChange = 100;
+    static baseWeight = 10000;
+    static baseChange = 10;
     public logger: Logger;
     private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
     private prepared = false;
@@ -41,10 +42,10 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
     getExportData(): object[] {
         let data = [];
 
-        for (let weekendObject of WeekendObject.SUPPORTED_CLASSES) {
+        for (let weekendObject of SUPPORTED_CLASSES) {
 
             data = data.concat(
-                ...this.weights.get(Qualifying)
+                ...this.weights.get(weekendObject)
                     .sort((a, b) => b.weight - a.weight)
                     .map(weight => ({
                         driverId: weight.driver.id,
@@ -71,7 +72,7 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
         await this.prepare(weekendObject.drivers);
 
         let generator;
-        for (let object of WeekendObject.SUPPORTED_CLASSES) {
+        for (let object of SUPPORTED_CLASSES) {
             if (weekendObject instanceof object) {
                 generator = this.generators.get(object)
             }
@@ -98,7 +99,12 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                     position++;
                 }
             }
-            currentMapping.weight += (position - result) * BasedOnWeightedHistoryDataGenerator.baseChange * weight;
+
+            const correction = (position - result) * BasedOnWeightedHistoryDataGenerator.baseChange * weight;
+
+            this.logger.debug(`Expected position ${position} found ${result} correcting ${correction}`)
+
+            currentMapping.weight += correction;
             if (currentMapping.weight < 1) {
                 currentMapping.weight = 1;
             }
@@ -119,7 +125,7 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
             for (let race of this.historyData.getRacesForSeason(seasonYear)) {
                 this.logger.debug('race');
 
-                for (let object of WeekendObject.SUPPORTED_CLASSES) {
+                for (let object of SUPPORTED_CLASSES) {
                     this.logger.debug('object', object);
 
                     for (let result of this.historyData.getResultsForWeekendObject(object, race)) {
@@ -140,12 +146,14 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                         }
                     }
                 }
-                weight *= 1.5
+                weight *= 1.01
             }
-            weight *= 2;
+            weight *= 1.1;
         }
 
-        for (let object of WeekendObject.SUPPORTED_CLASSES) {
+        for (let object of SUPPORTED_CLASSES) {
+            this.weights.get(object).forEach((map) => map.weight = map.weight === BasedOnWeightedHistoryDataGenerator.baseWeight ? 0 : map.weight)
+
             this.generators.set(object, new BasedOnWeightsGenerator(this.weights.get(object)))
         }
 

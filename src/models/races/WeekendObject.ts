@@ -11,7 +11,6 @@ import Race from "./Race";
 
 export default abstract class WeekendObject extends HasResults implements Simulateable, WithExporter, Exportable {
 
-    static SUPPORTED_CLASSES = [Race,Qualifying]
 
     abstract type: string;
     exporter: Exporter;
