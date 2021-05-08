@@ -6,8 +6,13 @@ import Logger from "../../Logger";
 import Qualifying from "../../races/Qualifying";
 import Race from "../../races/Race";
 import WeekendObject from "../../races/WeekendObject";
+import singleton from '../../makeSingleton';
 
-export default class CombinedHistoryData implements WithLogger {
+export class CombinedHistoryData implements WithLogger {
+
+    static instance: CombinedHistoryData;
+    static singleton = singleton(CombinedHistoryData);
+
     public logger: Logger;
     private readCsvsAlready = false;
 
@@ -100,3 +105,5 @@ export default class CombinedHistoryData implements WithLogger {
         this.logger.info('Reading CSVs done');
     }
 }
+
+export default CombinedHistoryData.singleton()

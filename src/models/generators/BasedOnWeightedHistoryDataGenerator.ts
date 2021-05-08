@@ -1,6 +1,6 @@
 import FinishGenerator from "../../interfaces/FinishGenerator";
 import Result from "../races/Result";
-import CombinedHistoryData from "../data/csv/CombinedHistoryData";
+import combinedHistoryData from "../data/csv/CombinedHistoryData";
 import Driver from "../roster/Driver";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
@@ -25,7 +25,7 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
     exporter: Exporter;
     private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
     private prepared = false;
-    private historyData: CombinedHistoryData;
+    private historyData = combinedHistoryData;
     private qualiWeights: WeightMap[] = [];
     private raceWeights: WeightMap[] = [];
     private weights = new Map([
@@ -36,7 +36,6 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
 
     constructor(seasonYears: string[]) {
         this.seasonYears = seasonYears;
-        this.historyData = new CombinedHistoryData();
         this.logger = new Logger('BasedOnWeightedHistoryGenerator')
     }
 

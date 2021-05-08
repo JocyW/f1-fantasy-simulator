@@ -6,13 +6,13 @@ import Exportable from "../../../interfaces/Exportable";
 import Exporter from "../../exporter/Exporter";
 import Logger from "../../Logger";
 import FinishGenerator from "../../../interfaces/FinishGenerator";
-import CombinedHistoryData from "../../data/csv/CombinedHistoryData";
 import SUPPORTED_CLASSES from "../../races/supportedWeekendObjects";
 import Driver from "../../roster/Driver";
 import WeekendObject from "../../races/WeekendObject";
 import {season2021To2021Mapping} from "../../data/csv/mappings/data";
 import {ResultsTable} from "../../data/csv/ResultsTable";
 import BasedOnWeightedHistoryDataGenerator from "../BasedOnWeightedHistoryDataGenerator";
+import combinedHistoryData from "../../data/csv/CombinedHistoryData";
 
 class DnfData {
     racesCount: number = 0
@@ -30,13 +30,12 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
     historyGenerator: BasedOnWeightedHistoryDataGenerator
     prepared = false;
     dnfProbabilityMapMap: Map<(typeof WeekendObject), Map<Driver, DnfData>> = new Map<typeof WeekendObject, Map<Driver, DnfData>>()
-    historyData: CombinedHistoryData;
+    historyData = combinedHistoryData;
     seasonYears: string[] = [];
 
     constructor(generator: FinishGenerator, seasonYears: string[]) {
         super(generator);
         this.logger = new Logger('HistoricalDNFModifier')
-        this.historyData = new CombinedHistoryData();
         this.seasonYears = seasonYears;
         for (let object of SUPPORTED_CLASSES) {
             this.dnfProbabilityMapMap.set(object, new Map<Driver, DnfData>())

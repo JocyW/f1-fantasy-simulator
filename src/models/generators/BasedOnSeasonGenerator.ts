@@ -9,7 +9,7 @@ import Qualifying from "../races/Qualifying";
 import {CSV_DRIVER_IDS} from "../data/csv/mappings/data";
 import {drivers} from "../../generate";
 import {mapDriverId} from '../data/csv/mappings/func';
-import CombinedHistoryData from "../data/csv/CombinedHistoryData";
+import combinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
@@ -18,12 +18,11 @@ import WeekendObject from "../races/WeekendObject";
 export default class BasedOnSeasonGenerator extends HasSeasonYear implements FinishGenerator, WithLogger {
 
     public logger: Logger;
-    private historyData: CombinedHistoryData;
+    private historyData = combinedHistoryData;
     private raceIndex = 0;
 
     constructor(seasonYear: string) {
         super(seasonYear)
-        this.historyData = new CombinedHistoryData();
         this.logger = new Logger('BasedOnSeasonGenerator');
     }
 
