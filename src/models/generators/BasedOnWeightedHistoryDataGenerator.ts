@@ -22,6 +22,7 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
     static baseWeight = 10000;
     static baseChange = 10;
     public logger: Logger;
+    exporter: Exporter;
     private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
     private prepared = false;
     private historyData: CombinedHistoryData;
@@ -63,9 +64,6 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
     getExportName(): string {
         return "GeneratorWeights"
     }
-
-    exporter: Exporter;
-
 
     async generate(weekendObject: WeekendObject): Promise<Result[]> {
         this.logger.debug('Generating results');

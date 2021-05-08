@@ -22,7 +22,16 @@ class DnfData {
         return this.dnfCount / this.racesCount
     }
 }
+
 export default class HistoricalDNFModifier extends FinishGeneratorModifier implements WithLogger, WithExporter, Exportable {
+
+    exporter: Exporter;
+    logger: Logger;
+    historyGenerator: BasedOnWeightedHistoryDataGenerator
+    prepared = false;
+    dnfProbabilityMapMap: Map<(typeof WeekendObject), Map<Driver, DnfData>> = new Map<typeof WeekendObject, Map<Driver, DnfData>>()
+    historyData: CombinedHistoryData;
+    seasonYears: string[] = [];
 
     constructor(generator: FinishGenerator, seasonYears: string[]) {
         super(generator);
@@ -48,8 +57,32 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         return results
     }
 
+    getExportData(): object[] {
+        const res = [];
+
+        for (let [weekendObject, map] of this.dnfProbabilityMapMap.entries()) {
+            for (let [driver, data] of map.entries()) {
+                res.push({
+                    driverId: driver.id,
+                    driverFirstName: driver.firstName,
+                    driverLastName: driver.lastName,
+                    driverTeamId: driver.team.id,
+                    racesCount: data.racesCount,
+                    dnfCount: data.dnfCount,
+                    dnfProbability: data.probability
+                })
+            }
+        }
+
+        return res;
+    }
+
+    getExportName(): string {
+        return "HistoricalDNFModifier";
+    }
+
     private async prepare(weekendObject: WeekendObject) {
-        if(this.prepared) return;
+        if (this.prepared) return;
         await this.historyData.readCsvs();
 
         for (let seasonYear of this.seasonYears) {
@@ -87,38 +120,6 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         }
 
         this.prepared = true;
-    }
-
-    exporter: Exporter;
-    logger: Logger;
-    historyGenerator: BasedOnWeightedHistoryDataGenerator
-    prepared = false;
-    dnfProbabilityMapMap: Map<(typeof WeekendObject), Map<Driver, DnfData>> = new Map<typeof WeekendObject, Map<Driver, DnfData>>()
-    historyData: CombinedHistoryData;
-    seasonYears: string[] = [];
-
-    getExportData(): object[] {
-        const res = [];
-
-        for (let [weekendObject, map] of this.dnfProbabilityMapMap.entries()) {
-            for (let [driver, data] of map.entries()) {
-                res.push({
-                    driverId: driver.id,
-                    driverFirstName: driver.firstName,
-                    driverLastName: driver.lastName,
-                    driverTeamId: driver.team.id,
-                    racesCount: data.racesCount,
-                    dnfCount: data.dnfCount,
-                    dnfProbability: data.probability
-                })
-            }
-        }
-
-        return res;
-    }
-
-    getExportName(): string {
-        return "HistoricalDNFModifier";
     }
 
 }
