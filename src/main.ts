@@ -4,7 +4,7 @@ import Calendar from "./models/races/Calendar";
 import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
 import CsvExporter from "./models/exporter/CsvExporter";
-import BasedOnWeightedHistoryDataWithDNFs from "./models/generators/BasedOnWeightedHistoryDataWithDNFs";
+import HistoricalDNFModifier from "./models/generators/modifier/HistoricalDNFModifier";
 
 export const DEBUG_ENABLED = false;
 
@@ -17,7 +17,9 @@ const getData = async () => {
     })
     calendar.drivers = Object.values(drivers);
 
-    const generator = new BasedOnWeightedHistoryDataWithDNFs(['2018','2019','2020', '2021']);
+    const years = ['2018', '2019', '2020', '2021'];
+
+    const generator = new HistoricalDNFModifier(new BasedOnWeightedHistoryDataGenerator(years), years);
     generator.exporter = new CsvExporter({
         basePath: './dist/exports'
     })

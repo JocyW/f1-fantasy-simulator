@@ -1,17 +1,18 @@
-import FinishGenerator from "../../interfaces/FinishGenerator";
-import WeekendObject from "../races/WeekendObject";
-import Result from "../races/Result";
-import WithLogger from "../../interfaces/WithLogger";
-import WithExporter from "../../interfaces/WithExporter";
-import Exportable from "../../interfaces/Exportable";
-import Exporter from "../exporter/Exporter";
-import Logger from "../Logger";
-import BasedOnWeightedHistoryDataGenerator from "./BasedOnWeightedHistoryDataGenerator";
-import Driver from "../roster/Driver";
-import CombinedHistoryData from "../data/csv/CombinedHistoryData";
-import {season2021To2021Mapping} from "../data/csv/mappings/data";
-import {ResultsTable} from "../data/csv/ResultsTable";
-import SUPPORTED_CLASSES from "../races/supportedWeekendObjects";
+import FinishGeneratorModifier from "../../../interfaces/FinishGeneratorModifier";
+import Result from "../../races/Result";
+import WithLogger from "../../../interfaces/WithLogger";
+import WithExporter from "../../../interfaces/WithExporter";
+import Exportable from "../../../interfaces/Exportable";
+import Exporter from "../../exporter/Exporter";
+import Logger from "../../Logger";
+import FinishGenerator from "../../../interfaces/FinishGenerator";
+import CombinedHistoryData from "../../data/csv/CombinedHistoryData";
+import SUPPORTED_CLASSES from "../../races/supportedWeekendObjects";
+import Driver from "../../roster/Driver";
+import WeekendObject from "../../races/WeekendObject";
+import {season2021To2021Mapping} from "../../data/csv/mappings/data";
+import {ResultsTable} from "../../data/csv/ResultsTable";
+import BasedOnWeightedHistoryDataGenerator from "../BasedOnWeightedHistoryDataGenerator";
 
 class DnfData {
     racesCount: number = 0
@@ -21,12 +22,11 @@ class DnfData {
         return this.dnfCount / this.racesCount
     }
 }
+export default class HistoricalDNFModifier extends FinishGeneratorModifier implements WithLogger, WithExporter, Exportable {
 
-export default class BasedOnWeightedHistoryDataWithDNFs implements FinishGenerator, WithLogger, WithExporter, Exportable {
-
-    constructor(seasonYears: string[]) {
-        this.logger = new Logger('BasedOnWeightedHistoryDataWithDNFs')
-        this.historyGenerator = new BasedOnWeightedHistoryDataGenerator(seasonYears)
+    constructor(generator: FinishGenerator, seasonYears: string[]) {
+        super(generator);
+        this.logger = new Logger('HistoricalDNFModifier')
         this.historyData = new CombinedHistoryData();
         this.seasonYears = seasonYears;
         for (let object of SUPPORTED_CLASSES) {
@@ -34,19 +34,18 @@ export default class BasedOnWeightedHistoryDataWithDNFs implements FinishGenerat
         }
     }
 
-    async generate(weekendObject: WeekendObject): Promise<Result[]> {
+    async modify(weekendObject: WeekendObject, results: Result[]): Promise<Result[]> {
         await this.prepare(weekendObject);
-        let res = await this.historyGenerator.generate(weekendObject);
 
         const objectClass = SUPPORTED_CLASSES.find((clazz) => (weekendObject instanceof clazz))
 
-        for (let result of res) {
+        for (let result of results) {
             if (Math.random() <= this.dnfProbabilityMapMap.get(objectClass).get(result.driver).probability) {
                 result.place = Result.PLACE_DNF;
             }
         }
 
-        return res
+        return results
     }
 
     private async prepare(weekendObject: WeekendObject) {
@@ -119,7 +118,7 @@ export default class BasedOnWeightedHistoryDataWithDNFs implements FinishGenerat
     }
 
     getExportName(): string {
-        return "GeneratorWeightsWithDNFs";
+        return "HistoricalDNFModifier";
     }
 
 }
