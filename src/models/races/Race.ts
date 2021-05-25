@@ -3,6 +3,7 @@ import Qualifying from "./Qualifying";
 import WeekendObject from "./WeekendObject";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
+import Result from "./Result";
 
 
 export default class Race extends WeekendObject implements WithLogger {
@@ -36,12 +37,11 @@ export default class Race extends WeekendObject implements WithLogger {
                 throw Error('Race has no qualifying');
             }
 
-            // Finished race
-            //TODO: change when DNF implemented
-            let score = 1;
 
             const raceResult = this.findResultByDriverId(driver.id)
             const qualiResult = this.qualifying.findResultByDriverId(driver.id);
+
+            let score = raceResult.place > 0 ? 1 : 0;
 
             if (raceResult.place > 0) {
                 // Positions gained in race
@@ -75,12 +75,21 @@ export default class Race extends WeekendObject implements WithLogger {
 
                     score += difference * modifier;
                 }
-                //TODO: DNF + Disqualification
 
                 if (raceResult.place <= Race.POINTS_MAP.length) {
                     score += Race.POINTS_MAP[raceResult.place - 1];
                 }
+            }
 
+            if (!forTeam) {
+
+                if (raceResult.place === Result.PLACE_DNF) {
+                    score -= 15
+                }
+
+                if (raceResult.place === Result.PLACE_DISQUALIFICATION) {
+                    score -= 20
+                }
             }
 
             if (isNaN(score)) {

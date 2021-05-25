@@ -20,7 +20,11 @@ import SUPPORTED_CLASSES from "../races/supportedWeekendObjects";
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger, WithExporter, Exportable {
 
     static baseWeight = 10000;
-    static baseChange = 10;
+    static baseChange = 10
+    static raceMultiplier = 1;
+    static seasonMultiplier = 1.1;
+    static rookieWeight = BasedOnWeightedHistoryDataGenerator.baseWeight * 0.01;
+
     public logger: Logger;
     exporter: Exporter;
     private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
@@ -143,13 +147,18 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                         }
                     }
                 }
-                weight *= 1.01
+                weight *= BasedOnWeightedHistoryDataGenerator.raceMultiplier
             }
-            weight *= 1.1;
+            weight *= BasedOnWeightedHistoryDataGenerator.seasonMultiplier
         }
 
         for (let object of SUPPORTED_CLASSES) {
-            this.weights.get(object).forEach((map) => map.weight = map.weight === BasedOnWeightedHistoryDataGenerator.baseWeight ? 0 : map.weight)
+            this.weights.get(object).forEach((map) =>
+                map.weight = map.weight === BasedOnWeightedHistoryDataGenerator.baseWeight ?
+                    BasedOnWeightedHistoryDataGenerator.rookieWeight
+                    :
+                    map.weight
+            )
 
             this.generators.set(object, new BasedOnWeightsGenerator(this.weights.get(object)))
         }

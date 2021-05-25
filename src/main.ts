@@ -17,9 +17,14 @@ const getData = async () => {
     })
     calendar.drivers = Object.values(drivers);
 
-    const years = ['2018', '2019', '2020', '2021'];
+    const years = ['2016', '2017', '2018', '2019', '2020', '2021'];
 
-    const generator = new HistoricalDNFModifier(new BasedOnWeightedHistoryDataGenerator(years), years);
+    const gen = new BasedOnWeightedHistoryDataGenerator(years);
+    gen.exporter = new CsvExporter({
+        basePath: './dist/exports'
+    })
+
+    const generator = new HistoricalDNFModifier(gen, years);
     generator.exporter = new CsvExporter({
         basePath: './dist/exports'
     })

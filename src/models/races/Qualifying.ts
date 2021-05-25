@@ -2,6 +2,7 @@ import Driver from "../roster/Driver";
 import WeekendObject from "./WeekendObject";
 import WithLogger from "../../interfaces/WithLogger";
 import Logger from "../Logger";
+import Result from "./Result";
 
 export default class Qualifying extends WeekendObject implements WithLogger {
 
@@ -13,40 +14,46 @@ export default class Qualifying extends WeekendObject implements WithLogger {
         this.logger = new Logger(this.type);
     }
 
-    getDriverScore(driver: Driver, forTeam = false): Promise<number> {
+    async getDriverScore(driver: Driver, forTeam = false): Promise<number> {
         this.logger.debug('Getting driver score', driver, forTeam)
-        return new Promise(resolve => {
-            if (!this.results.length) {
-                this.logger.error('Simulate must be called first')
-            }
+        if (!this.results.length) {
+            this.logger.error('Simulate must be called first')
+        }
 
-            let score = 1;
-            const result = this.findResultByDriverId(driver.id);
+        const result = this.findResultByDriverId(driver.id);
 
-            // Q2 Finish
-            if (result.place <= 15) {
-                score += 2;
-            }
-            // Q3 Finish
-            if (result.place <= 10) {
-                score += 3;
-            }
+        let score = result.place > 0 ? 1 : 0;
 
-            // Top 10 points
-            if (result.place <= 10) {
-                score += 11 - result.place;
-            }
+        // Q2 Finish
+        if (result.place <= 15) {
+            score += 2;
+        }
+        // Q3 Finish
+        if (result.place <= 10) {
+            score += 3;
+        }
 
+        // Top 10 points
+        if (result.place <= 10) {
+            score += 11 - result.place;
+        }
+
+        if (!forTeam) {
             // Better than teammate
-            if (result.place < this.findTeammateResult(driver).place && !forTeam) {
+            if (result.place < this.findTeammateResult(driver).place) {
                 score += 2
             }
 
-            //TODO: did not qualify
-            //TODO: Disqualification
+            if (result.place === Result.PLACE_DNF) {
+                score -= 5
+            }
 
-            this.logger.debug('got driver score: ' + score);
-            resolve(score);
-        })
+            if (result.place === Result.PLACE_DISQUALIFICATION) {
+                score -= 10
+            }
+        }
+
+        this.logger.debug('got driver score: ' + score);
+        return score;
     }
 }

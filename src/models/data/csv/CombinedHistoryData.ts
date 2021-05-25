@@ -83,8 +83,8 @@ export class CombinedHistoryData implements WithLogger {
 
 
     public async readCsvs() {
-        this.logger.info('Reading CSVs...');
         if (this.readCsvsAlready) return;
+        this.logger.info('Reading CSVs...');
 
         this._races = (await races.readFile())
         this._qualifyingResults = await qualifyingData.readFile();

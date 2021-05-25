@@ -3,7 +3,7 @@ import WeekendObject from "../models/races/WeekendObject";
 import Result from "../models/races/Result";
 
 export default abstract class FinishGeneratorModifier implements FinishGenerator {
-    private generator: FinishGenerator;
+    protected generator: FinishGenerator;
 
     protected constructor(finishGenerator: FinishGenerator) {
         this.generator = finishGenerator;

@@ -13,6 +13,7 @@ import {season2021To2021Mapping} from "../../data/csv/mappings/data";
 import {ResultsTable} from "../../data/csv/ResultsTable";
 import BasedOnWeightedHistoryDataGenerator from "../BasedOnWeightedHistoryDataGenerator";
 import combinedHistoryData from "../../data/csv/CombinedHistoryData";
+import {drivers} from "../../../generate";
 
 class DnfData {
     racesCount: number = 0
@@ -89,8 +90,6 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
                 for (let weekendObjectClass of SUPPORTED_CLASSES) {
                     const map = this.dnfProbabilityMapMap.get(weekendObjectClass);
 
-                    if (!map) throw Error('WTF?')
-
                     for (let result of this.historyData.getResultsForWeekendObject(weekendObjectClass, race)) {
                         const driver = Driver.findById(weekendObject.drivers, season2021To2021Mapping[result.driverId]);
 
@@ -104,7 +103,7 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
 
                             data.racesCount++
                             // @ts-ignore
-                            if (ResultsTable.POSITION_NOT_FINISHED === result.position || (result.q1 && result.q1 === ResultsTable.POSITION_NOT_FINISHED)) {
+                            if (ResultsTable.POSITION_NOT_FINISHED === result.position) {
                                 data.dnfCount++;
                             }
                         }
@@ -114,7 +113,8 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         }
 
         if (this.exporter) {
-            this.historyGenerator.exporter = this.exporter;
+            // @ts-ignore
+            this.generator.exporter = this.exporter;
             this.exporter.export(this);
         }
 

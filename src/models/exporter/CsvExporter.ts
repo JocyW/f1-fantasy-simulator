@@ -40,7 +40,7 @@ export default class CsvExporter extends Exporter {
             stream.write('\n');
         }
 
-        stream.end();
+        stream.close();
     }
 
 }
