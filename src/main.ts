@@ -1,7 +1,7 @@
-import {drivers, teams} from "./generate";
+import {driversObj, teams} from "./generate";
 import Roster from "./models/roster/Roster";
 import Calendar from "./models/races/Calendar";
-import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator";
+import BasedOnWeightedHistoryDataGenerator from "./models/generators/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
 import CsvExporter from "./models/exporter/CsvExporter";
 import HistoricalDNFModifier from "./models/generators/modifier/HistoricalDNFModifier";
@@ -15,7 +15,7 @@ const getData = async () => {
     calendar.exporter = new CsvExporter({
         basePath: './dist/exports/weekend_object',
     })
-    calendar.drivers = Object.values(drivers);
+    calendar.drivers = Object.values(driversObj);
 
     const years = ['2016', '2017', '2018', '2019', '2020', '2021'];
 
@@ -32,9 +32,9 @@ const getData = async () => {
     await calendar.simulate(generator);
 
     const topRoster = new Roster();
-    topRoster.drivers = [drivers.verstappen, drivers.ricciardo, drivers.tsunoda, drivers.mazepin, drivers.mazepin];
+    topRoster.drivers = [driversObj.verstappen, driversObj.ricciardo, driversObj.tsunoda, driversObj.mazepin, driversObj.mazepin];
     topRoster.team = teams.mercedes;
-    topRoster.turboDriver = drivers.ricciardo;
+    topRoster.turboDriver = driversObj.ricciardo;
 
     jocysLeague.addEntry('Jocy', topRoster);
     jocysLeague.exporter = new CsvExporter({

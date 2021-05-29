@@ -1,11 +1,11 @@
-import {data} from './data';
+import {drivers} from './drivers';
 
 export const mapDriverId = (driverId: string, season: string): number => {
-    if (!data[season]) {
+    if (!drivers[season]) {
         throw Error(`SeasonMapping: season ${season} is not supported`);
     }
 
-    const mapping = data[season];
+    const mapping = drivers[season];
     const driver = mapping[driverId];
 
 

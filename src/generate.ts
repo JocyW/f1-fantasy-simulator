@@ -14,7 +14,7 @@ export const teams = {
     'haas': new Team({name: 'Haas', cost: 6.1, id: 29})
 };
 
-export const drivers = {
+export const driversObj = {
     'hamilton': new Driver({firstName: 'Lewis', lastName: 'Hamilton', team: teams.mercedes, cost: 33.5, id: 31}),
     'verstappen': new Driver({firstName: 'Max', lastName: 'Verstappen', team: teams.redbull, cost: 24.8, id: 37}),
     'bottas': new Driver({firstName: '', lastName: 'Bottas', team: teams.mercedes, cost: 23.6, id: 41}),
@@ -37,4 +37,4 @@ export const drivers = {
     'mazepin': new Driver({firstName: '', lastName: 'Mazepin', team: teams.haas, cost: 5.5, id: 113}),
 };
 
-export default {teams, drivers};
+export default {teams, drivers: driversObj};

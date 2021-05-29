@@ -1,6 +1,6 @@
 import Driver from "./Driver";
 import Team from "./Team";
-import {drivers, teams} from "../../generate";
+import {driversObj, teams} from "../../generate";
 
 export type RosterBackupObject = {
     team: number,
@@ -74,7 +74,7 @@ export default class Roster {
 
     static fromBackupObject(object: RosterBackupObject): Roster {
 
-        const driversArray = Object.values(drivers);
+        const driversArray = Object.values(driversObj);
         const roster = new Roster();
         roster.team = Object.values(teams).find((team) => team.id === object.team);
         // @ts-ignore id is unique

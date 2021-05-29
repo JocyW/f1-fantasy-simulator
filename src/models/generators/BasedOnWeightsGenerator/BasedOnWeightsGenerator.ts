@@ -11,7 +11,10 @@ export default class BasedOnWeightsGenerator implements FinishGenerator, WithLog
     private prepared = false;
 
     constructor(weights: WeightMap[]) {
-        this.weightMaps = weights;
+        this.weightMaps = weights.map((weight) => {
+            weight.weight = weight.weight * weight.weight;
+            return weight;
+        });
         this.logger = new Logger('BasedOnWeightsGenerator')
         this.logger.debug('ctr', weights);
     }

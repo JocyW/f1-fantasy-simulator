@@ -14,7 +14,7 @@ export default abstract class CsvTable<T> implements WithLogger {
 
 
     readFile(): Promise<T[]> {
-        this.logger.info('Reading data from ', this.path)
+        this.logger.info('Reading drivers from ', this.path)
         return new Promise((resolve, reject) => {
 
             if (!this.path) {

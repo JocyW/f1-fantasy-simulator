@@ -6,8 +6,8 @@ import {ResultsTable} from '../data/csv/ResultsTable';
 import {FinishableData} from "../data/csv/FinishableData";
 import Race from "../races/Race";
 import Qualifying from "../races/Qualifying";
-import {CSV_DRIVER_IDS} from "../data/csv/mappings/data";
-import {drivers} from "../../generate";
+import {CSV_DRIVER_IDS} from "../data/csv/mappings/drivers";
+import {driversObj} from "../../generate";
 import {mapDriverId} from '../data/csv/mappings/func';
 import combinedHistoryData from "../data/csv/CombinedHistoryData";
 import HasSeasonYear from "../higher/HasSeasonYear";
@@ -45,7 +45,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
             let season2021DriverId = mapDriverId(result.driverId, this.seasonYear);
 
             // FUCKING COVID driver changes...
-            const weirdDriverChanges = [drivers.vettel.id, drivers.stroll.id];
+            const weirdDriverChanges = [driversObj.vettel.id, driversObj.stroll.id];
             if (weirdDriverChanges.includes(season2021DriverId)) {
                 if (results.find((result) => result.driver.id === season2021DriverId)) {
                     season2021DriverId = weirdDriverChanges.find((driverId) => driverId !== season2021DriverId);
@@ -53,7 +53,7 @@ export default class BasedOnSeasonGenerator extends HasSeasonYear implements Fin
             }
 
             if (csvResults.find((finishable) => finishable.driverId === CSV_DRIVER_IDS.aitkin) && result.driverId === '847') {
-                season2021DriverId = drivers.hamilton.id;
+                season2021DriverId = driversObj.hamilton.id;
             }
 
             const driver = weekendObject.drivers.find((driver) => driver.id === season2021DriverId);

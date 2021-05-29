@@ -9,11 +9,11 @@ import FinishGenerator from "../../../interfaces/FinishGenerator";
 import SUPPORTED_CLASSES from "../../races/supportedWeekendObjects";
 import Driver from "../../roster/Driver";
 import WeekendObject from "../../races/WeekendObject";
-import {season2021To2021Mapping} from "../../data/csv/mappings/data";
+import {season2021To2021Mapping} from "../../data/csv/mappings/drivers";
 import {ResultsTable} from "../../data/csv/ResultsTable";
-import BasedOnWeightedHistoryDataGenerator from "../BasedOnWeightedHistoryDataGenerator";
+import BasedOnWeightedHistoryDataGenerator
+    from "../BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
 import combinedHistoryData from "../../data/csv/CombinedHistoryData";
-import {drivers} from "../../../generate";
 
 class DnfData {
     racesCount: number = 0

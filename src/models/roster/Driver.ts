@@ -17,4 +17,8 @@ export default class Driver extends HasCost {
         //TODO: convert to O(1)
         return drivers.find((driver) => driver.id === driverId)
     }
+
+    static findTeamById(drivers: Driver[], teamId: number): Team {
+        return drivers.find((driver) => driver.team.id === teamId)?.team
+    }
 }

@@ -7,6 +7,7 @@ import Qualifying from "../../races/Qualifying";
 import Race from "../../races/Race";
 import WeekendObject from "../../races/WeekendObject";
 import singleton from '../../makeSingleton';
+import {FinishableData} from "./FinishableData";
 
 export class CombinedHistoryData implements WithLogger {
 
@@ -69,7 +70,7 @@ export class CombinedHistoryData implements WithLogger {
         return this.races.filter((race) => race.year === seasonYear);
     }
 
-    public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData) {
+    public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData): QualifyingData[]|ResultData[] {
         if (weekendObject instanceof Race || weekendObject === Race) {
             this.logger.debug('getting results for race');
             return this.getRaceResultForRace(race);
