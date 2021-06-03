@@ -12,7 +12,7 @@ import BasedOnWeightsGeneratorV2 from "./models/generators/BasedOnWeightsGenerat
 export const DEBUG_ENABLED = false;
 
 const getCalendar = async () => {
-    const numberOfWeekends = 1000;
+    const numberOfWeekends = 10;
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.exporter = new CsvExporter({
@@ -20,7 +20,7 @@ const getCalendar = async () => {
     })
     calendar.drivers = Object.values(driversObj);
 
-    const years = ['2016', '2017', '2018', '2019', '2020', '2021'];
+    const years = ['2018', '2019', '2020', '2021'];
 
     const gen = new BasedOnWeightedHistoryDataGenerator(years, BasedOnWeightsGeneratorV2);
     gen.exporter = new CsvExporter({
@@ -107,4 +107,4 @@ const generateLeagueResults = async () => {
     await jocysLeague.getScore(null);
 
 }
-generateBruteForcedResults()
+generateLeagueResults()

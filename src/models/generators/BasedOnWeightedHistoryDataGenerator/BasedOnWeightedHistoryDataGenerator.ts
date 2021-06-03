@@ -19,9 +19,9 @@ import BasedOnWeightsGenerator from "../BasedOnWeightsGenerator/BasedOnWeightsGe
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger, WithExporter {
 
     static baseWeight = 10;
-    static baseChange = 10
-    static raceMultiplier = 1.01;
-    static seasonMultiplier = 1.1;
+    static baseChange = 100;
+    static raceMultiplier = 1.05;
+    static seasonMultiplier = 2;
     static rookieWeight = BasedOnWeightedHistoryDataGenerator.baseWeight * 0.01;
 
     public logger: Logger;

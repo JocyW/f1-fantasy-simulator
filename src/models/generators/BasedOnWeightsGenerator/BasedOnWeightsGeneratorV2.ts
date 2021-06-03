@@ -13,7 +13,7 @@ export default class BasedOnWeightsGeneratorV2 extends BasedOnWeightsGenerator i
 
     constructor(weights: WeightMap[]) {
         super(weights)
-        this.logger = new Logger('BasedOnWeightsGenerator')
+        this.logger = new Logger('BasedOnWeightsGeneratorV2')
         this.logger.debug('ctr', weights);
     }
 
@@ -25,24 +25,18 @@ export default class BasedOnWeightsGeneratorV2 extends BasedOnWeightsGenerator i
             copiedWeights = copiedWeights.map((weightMap) => {
                 weightMap.weight += (copiedWeights.length - weekendObject.qualifying.results.find((result) => {
                     return result.driver.id === weightMap.driver.id
-                }).place) * BasedOnWeightsGenerator.NORMALIZE_TO * 0.2
+                }).place) * BasedOnWeightsGenerator.NORMALIZE_TO * 0.5
                 return weightMap
             })
         }
 
         for (let weightMap of copiedWeights) {
-            weightMap.weight = weightMap.weight + Math.random() * BasedOnWeightsGenerator.NORMALIZE_TO * 0.5;
+            weightMap.weight = weightMap.weight * 2 + Math.random() * BasedOnWeightsGenerator.NORMALIZE_TO * 0.5;
         }
 
-        copiedWeights.sort((wmA, wmB) => {
-            return wmB.weight - wmA.weight
-        });
+        copiedWeights.sort((wmA, wmB) => wmB.weight - wmA.weight);
 
         let i = 1;
-        return copiedWeights.map((weightMap) => {
-            return new Result({driver: weightMap.driver, place: i++})
-        })
+        return copiedWeights.map((weightMap) => new Result({driver: weightMap.driver, place: i++}))
     }
-
-
 }
