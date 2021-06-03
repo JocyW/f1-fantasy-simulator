@@ -1,3 +1,6 @@
+import * as fs from "fs";
+import * as path from "path";
+
 const LOG_LEVEL_ENUM = {
     'debug': 1,
     'info': 2,
@@ -5,7 +8,16 @@ const LOG_LEVEL_ENUM = {
     'error': 4
 }
 
+const LOG_TRANSPORTS_ENUM = {
+    'console': 1,
+    'file': 2
+}
+
 const LOG_LEVEL = 'info';
+const LOG_TRANSPORTS = [LOG_TRANSPORTS_ENUM.console, LOG_TRANSPORTS_ENUM.file];
+
+const now = new Date();
+const fileStream = fs.createWriteStream(path.join('./dist', `${now.getDate()}-${now.getMonth()}-${now.getFullYear()}--${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}-debug.log`))
 
 export default class Logger {
     private className: string;
@@ -29,9 +41,20 @@ export default class Logger {
     }
 
     public log(level: 'error' | 'warn' | 'info' | 'debug', ...messages) {
+        const now = new Date();
+
         if (LOG_LEVEL_ENUM[level] >= LOG_LEVEL_ENUM[LOG_LEVEL]) {
-            const now = new Date();
-            console[level](`${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ${Logger.toFixedLength(level.toUpperCase(), 5)} ${Logger.toFixedLength(this.className, 20)}`, ...messages)
+            if (LOG_TRANSPORTS.includes(LOG_TRANSPORTS_ENUM.console)) {
+                console[level](`${now.getHours()}:${now.getMinutes()}:${now.getSeconds()} ${Logger.toFixedLength(level.toUpperCase(), 5)} ${Logger.toFixedLength(this.className, 20)}`, ...messages)
+            }
+        }
+
+        if (LOG_TRANSPORTS.includes(LOG_TRANSPORTS_ENUM.file)) {
+            fileStream.write(JSON.stringify({
+                level,
+                className: this.className,
+                messages: [...messages]
+            }) + '\n')
         }
     }
 

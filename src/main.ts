@@ -11,7 +11,7 @@ import bruteForced from '../assets/brute_force.json';
 export const DEBUG_ENABLED = false;
 
 const getCalendar = async () => {
-    const numberOfWeekends = 1000;
+    const numberOfWeekends = 10;
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.exporter = new CsvExporter({
@@ -106,4 +106,4 @@ const generateLeagueResults = async () => {
     await jocysLeague.getScore(null);
 
 }
-generateBruteForcedResults()
+generateLeagueResults()

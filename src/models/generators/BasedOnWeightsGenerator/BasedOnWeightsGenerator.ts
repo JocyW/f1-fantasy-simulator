@@ -4,23 +4,34 @@ import Logger from "../../Logger";
 import WeekendObject from "../../races/WeekendObject";
 import Result from "../../races/Result";
 import WeightMap from "./WeightMap";
+import Race from "../../races/Race";
 
 export default class BasedOnWeightsGenerator implements FinishGenerator, WithLogger {
+
+    static NORMALIZE_TO = 1000;
+
     public logger: Logger;
     private weightMaps: WeightMap[];
-    private prepared = false;
 
     constructor(weights: WeightMap[]) {
-        this.weightMaps = weights.map((weight) => {
-            weight.weight = weight.weight * weight.weight;
-            return weight;
-        });
+        this.weightMaps = weights;
         this.logger = new Logger('BasedOnWeightsGenerator')
         this.logger.debug('ctr', weights);
     }
 
     async generate(weekendObject: WeekendObject): Promise<Result[]> {
-        let copiedWeights = [...this.weightMaps];
+        let copiedWeights = [...this.weightMaps.map((weightMap) => ({...weightMap}))];
+
+        // Incorporate qualifying results into race results
+        if (weekendObject instanceof Race) {
+            copiedWeights = copiedWeights.map((weightMap) => {
+                weightMap.weight += (copiedWeights.length - weekendObject.qualifying.results.find((result) => {
+                    return result.driver.id === weightMap.driver.id
+                }).place) * BasedOnWeightsGenerator.NORMALIZE_TO * 0.1
+                return weightMap
+            })
+        }
+
         let totalWeights;
         let placeCounter = 1;
         const res = [];

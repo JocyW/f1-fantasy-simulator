@@ -76,14 +76,13 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                         :
                         map.weight
 
-                    const normalizedTeamWeight = (teamWeight.weight / teamWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * 1000
-                    const normalizedDriverWeight = (map.weight / driverWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * 1000
-
+                    const normalizedTeamWeight = (teamWeight.weight / teamWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGenerator.NORMALIZE_TO
+                    const normalizedDriverWeight = (map.weight / driverWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGenerator.NORMALIZE_TO
                     map.weight = (normalizedDriverWeight + normalizedTeamWeight) / 2
                 }
             )
 
-            this.generators.set(object, new BasedOnWeightsGenerator(driverPreparator.weights.get(object)))
+            this.generators.set(object, new BasedOnWeightsGenerator(driverWeights))
         }
 
         if (this.exporter) {
