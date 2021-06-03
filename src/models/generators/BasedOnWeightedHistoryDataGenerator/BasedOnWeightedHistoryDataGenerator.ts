@@ -66,28 +66,32 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
         await teamPreparator.prepare(drivers);
 
         for (let object of SUPPORTED_CLASSES) {
-            driverPreparator.weights.get(object).forEach((map) => {
-                    const teamWeight = teamPreparator.weights.get(object).find((weightMap) => weightMap.team === map.driver.team)
-
-                    console.log(map.driver.team);
+            const driverWeights = driverPreparator.weights.get(object)
+            driverWeights.forEach((map) => {
+                    const teamWeights = teamPreparator.weights.get(object)
+                    const teamWeight = teamWeights.find((weightMap) => weightMap.team === map.driver.team)
 
                     map.weight = map.weight === BasedOnWeightedHistoryDataGenerator.baseWeight ?
                         BasedOnWeightedHistoryDataGenerator.rookieWeight
                         :
                         map.weight
 
-                    map.weight = (map.weight + teamWeight.weight) / 2
+                    const normalizedTeamWeight = (teamWeight.weight / teamWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * 1000
+                    const normalizedDriverWeight = (map.weight / driverWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * 1000
+
+                    map.weight = (normalizedDriverWeight + normalizedTeamWeight) / 2
                 }
             )
 
             this.generators.set(object, new BasedOnWeightsGenerator(driverPreparator.weights.get(object)))
         }
 
-        if (this.exporter)
-            //this.exporter.export(driverPreparator)
+        if (this.exporter) {
+            this.exporter.export(driverPreparator);
+            this.exporter.export(teamPreparator);
+        }
 
-
-            this.logger.info('Finished preparing weights');
+        this.logger.info('Finished preparing weights');
         this.prepared = true;
     }
 }

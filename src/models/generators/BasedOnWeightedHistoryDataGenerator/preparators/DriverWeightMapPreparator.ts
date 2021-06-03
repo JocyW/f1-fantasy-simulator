@@ -13,10 +13,6 @@ export default class DriverWeightMapPreparator extends HistoryWeightMapPreparato
         super(historyDataGenerator);
     }
 
-    getExportData(): object[] {
-        return [];
-    }
-
     getExportName(): string {
         return "DriverWeightMapPreparator";
     }
@@ -64,7 +60,7 @@ export default class DriverWeightMapPreparator extends HistoryWeightMapPreparato
         if (currentMapping) {
             let position = 1;
             for (let weightMapping of map) {
-                if (weightMapping.weight > currentMapping.weight) {
+                if (weightMapping.weight >= currentMapping.weight) {
                     position++;
                 }
             }

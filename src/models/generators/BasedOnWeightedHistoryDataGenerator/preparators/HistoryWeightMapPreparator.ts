@@ -41,14 +41,32 @@ export default abstract class HistoryWeightMapPreparator implements WeightMapPre
             data = data.concat(
                 ...this.weights.get(weekendObject)
                     .sort((a, b) => b.weight - a.weight)
-                    .map(weight => ({
-                        driverId: weight.driver.id,
-                        driverFirstName: weight.driver.firstName,
-                        driverLastName: weight.driver.lastName,
-                        driverTeamId: weight.driver.team.id,
-                        weight: weight.weight,
-                        weekendObject: new weekendObject().type
-                    }))
+                    .map(weight => {
+                        let tmp: any = {
+                            weight: weight.weight,
+                            weekendObject: new weekendObject().type
+                        }
+
+                        if(weight.driver){
+                            tmp = {
+                                ...tmp,
+                                driverId: weight.driver.id,
+                                driverFirstName: weight.driver.firstName,
+                                driverLastName: weight.driver.lastName,
+                                driverTeamId: weight.driver.team.id
+                            }
+                        }
+
+                        if(weight.team){
+                            tmp = {
+                                ...tmp,
+                                teamId: weight.team.id,
+                                teamName: weight.team.name
+                            }
+                        }
+
+                        return tmp;
+                    })
             )
         }
         return data;

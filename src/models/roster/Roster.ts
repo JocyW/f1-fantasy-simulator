@@ -1,6 +1,8 @@
 import Driver from "./Driver";
 import Team from "./Team";
 import {driversObj, teams} from "../../generate";
+import WithLogger from "../../interfaces/WithLogger";
+import Logger from "../Logger";
 
 export type RosterBackupObject = {
     team: number,
@@ -8,10 +10,10 @@ export type RosterBackupObject = {
     drivers: number[]
 }
 
-export default class Roster {
+export default class Roster implements WithLogger {
 
     constructor(props?: { drivers: [Driver, Driver, Driver, Driver, Driver], team: Team, turboDriver: Driver }) {
-
+        this.logger = new Logger('Roster');
         if (props?.drivers?.length)
             this.drivers = props?.drivers;
         if (props?.team)
@@ -19,6 +21,8 @@ export default class Roster {
         if (props?.turboDriver)
             this.turboDriver = props.turboDriver;
     }
+
+    logger: Logger;
 
     private _drivers: [Driver, Driver, Driver, Driver, Driver];
 
@@ -50,7 +54,7 @@ export default class Roster {
 
     set turboDriver(value: Driver) {
         if (value.cost >= 20) {
-            throw Error(`${this.name}: Turbo driver must cost less than 20 million`)
+            this.logger.warn(`${this.name}: Turbo driver must cost less than 20 million`)
         }
 
         this._turboDriver = value;
@@ -67,8 +71,8 @@ export default class Roster {
     }
 
     get numericalId(): string {
-        return (this.drivers.reduce((acc, driver) => acc += driver.id, 0)
-            + this.team.id
+        return (this.drivers.reduce((acc, driver) => acc *= driver.id, 1)
+            * this.team.id
         ).toString() + this.turboDriver.id;
     }
 
@@ -97,8 +101,7 @@ export default class Roster {
 
         const totalCost = this.drivers.reduce((acc, driver) => acc + driver.cost, 0) + this.team.cost;
         if (parseInt(totalCost.toFixed(2)) > 100) {
-            console.error(this.drivers, this.team);
-            throw Error(`${this.name}: The total cost of the roster exceeds 100 million: ${totalCost}`);
+            this.logger.warn(`${this.name}: The total cost of the roster exceeds 100 million: ${totalCost}`)
         }
     }
 

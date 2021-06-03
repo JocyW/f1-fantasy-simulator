@@ -14,6 +14,10 @@ export default class TeamWeightMapPreparator extends HistoryWeightMapPreparator 
         super(historyDataGenerator);
     }
 
+    getExportName(): string {
+        return "TeamWeightMapPreparator";
+    }
+
     getUniqueTeams(drivers: Driver[]): Team[] {
         return drivers.reduce((teams, driver) => {
             if (!teams.includes(driver.team)) {
@@ -61,7 +65,9 @@ export default class TeamWeightMapPreparator extends HistoryWeightMapPreparator 
 
                     for (let [team, positions] of teamPositions.entries()) {
                         if (positions.length > 0) {
-                            await this.updateWithNewWeight(team, weightMap, (positions.reduce((sum, n) => sum += n, 0) / positions.length), weight)
+                            for (let position of positions) {
+                                await this.updateWithNewWeight(team, weightMap, position, weight)
+                            }
                         }
                     }
                 }
@@ -77,19 +83,16 @@ export default class TeamWeightMapPreparator extends HistoryWeightMapPreparator 
             result = 20;
         }
         const currentMapping = map.find((mapping) => mapping.team === team);
-        console.log(currentMapping);
 
         if (currentMapping) {
             let position = 1;
             for (let weightMapping of map) {
-                if (weightMapping.weight > currentMapping.weight) {
+                if (weightMapping.weight >= currentMapping.weight) {
                     position++;
                 }
             }
 
-            position *= 2;
-
-            const correction = (position - result) * BasedOnWeightedHistoryDataGenerator.baseChange * weight;
+            const correction = (position - result / 2) * BasedOnWeightedHistoryDataGenerator.baseChange * weight;
 
             this.logger.debug(`Expected position ${position} found ${result} correcting ${correction}`)
 
