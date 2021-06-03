@@ -3,15 +3,16 @@ import Roster from "./models/roster/Roster";
 import Calendar from "./models/races/Calendar";
 import BasedOnWeightedHistoryDataGenerator
     from "./models/generators/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
-import {generateBruteForceJson, jocysLeague} from "./rosters";
+import {jocysLeague} from "./rosters";
 import CsvExporter from "./models/exporter/CsvExporter";
 import HistoricalDNFModifier from "./models/generators/modifier/HistoricalDNFModifier";
 import bruteForced from '../assets/brute_force.json';
+import BasedOnWeightsGeneratorV2 from "./models/generators/BasedOnWeightsGenerator/BasedOnWeightsGeneratorV2";
 
 export const DEBUG_ENABLED = false;
 
 const getCalendar = async () => {
-    const numberOfWeekends = 10;
+    const numberOfWeekends = 1000;
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.exporter = new CsvExporter({
@@ -21,7 +22,7 @@ const getCalendar = async () => {
 
     const years = ['2016', '2017', '2018', '2019', '2020', '2021'];
 
-    const gen = new BasedOnWeightedHistoryDataGenerator(years);
+    const gen = new BasedOnWeightedHistoryDataGenerator(years, BasedOnWeightsGeneratorV2);
     gen.exporter = new CsvExporter({
         basePath: './dist/exports'
     })
@@ -68,7 +69,7 @@ const generateBruteForcedResults = async () => {
     topRoster.turboDriver = driversObj.ricciardo;
 
     const newTopRoster = new Roster();
-    newTopRoster.drivers = [driversObj.verstappen,driversObj.norris,driversObj.ocon,driversObj.giovinazzi,driversObj.schumacher];
+    newTopRoster.drivers = [driversObj.verstappen, driversObj.norris, driversObj.ocon, driversObj.giovinazzi, driversObj.schumacher];
     newTopRoster.team = teams.mercedes;
     newTopRoster.turboDriver = driversObj.norris;
 
@@ -92,7 +93,7 @@ const generateLeagueResults = async () => {
     topRoster.turboDriver = driversObj.ricciardo;
 
     const newTopRoster = new Roster();
-    newTopRoster.drivers = [driversObj.verstappen,driversObj.norris,driversObj.ocon,driversObj.giovinazzi,driversObj.schumacher];
+    newTopRoster.drivers = [driversObj.verstappen, driversObj.norris, driversObj.ocon, driversObj.giovinazzi, driversObj.schumacher];
     newTopRoster.team = teams.mercedes;
     newTopRoster.turboDriver = driversObj.norris;
 

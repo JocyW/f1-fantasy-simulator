@@ -1,62 +1,15 @@
+import WeightMap from "./WeightMap";
 import FinishGenerator from "../../../interfaces/FinishGenerator";
-import WithLogger from "../../../interfaces/WithLogger";
-import Logger from "../../Logger";
 import WeekendObject from "../../races/WeekendObject";
 import Result from "../../races/Result";
-import WeightMap from "./WeightMap";
-import Race from "../../races/Race";
 
-export default class BasedOnWeightsGenerator implements FinishGenerator, WithLogger {
-
+export default abstract class BasedOnWeightsGenerator implements FinishGenerator {
     static NORMALIZE_TO = 1000;
+    protected weightMaps: WeightMap[];
 
-    public logger: Logger;
-    private weightMaps: WeightMap[];
-
-    constructor(weights: WeightMap[]) {
-        this.weightMaps = weights;
-        this.logger = new Logger('BasedOnWeightsGenerator')
-        this.logger.debug('ctr', weights);
+    constructor(weightMaps: WeightMap[]) {
+        this.weightMaps = weightMaps
     }
 
-    async generate(weekendObject: WeekendObject): Promise<Result[]> {
-        let copiedWeights = [...this.weightMaps.map((weightMap) => ({...weightMap}))];
-
-        // Incorporate qualifying results into race results
-        if (weekendObject instanceof Race) {
-            copiedWeights = copiedWeights.map((weightMap) => {
-                weightMap.weight += (copiedWeights.length - weekendObject.qualifying.results.find((result) => {
-                    return result.driver.id === weightMap.driver.id
-                }).place) * BasedOnWeightsGenerator.NORMALIZE_TO * 0.1
-                return weightMap
-            })
-        }
-
-        let totalWeights;
-        let placeCounter = 1;
-        const res = [];
-
-        do {
-            totalWeights = 0;
-            for (let weightMap of copiedWeights) {
-                weightMap.cumulativeWeight = totalWeights += weightMap.weight;
-            }
-
-            const rand = Math.random() * totalWeights;
-
-            let weightMap = copiedWeights.find((weightMap) => rand <= weightMap.cumulativeWeight);
-            this.logger.debug('weightMap', weightMap, copiedWeights);
-            res.push(new Result({
-                place: placeCounter,
-                driver: weightMap.driver
-            }));
-
-            copiedWeights.splice(copiedWeights.indexOf(weightMap), 1);
-            placeCounter++;
-        } while (copiedWeights.length > 0)
-
-        return res;
-    }
-
-
+    abstract generate(weekendObject: WeekendObject): Promise<Result[]>;
 }

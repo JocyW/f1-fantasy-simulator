@@ -7,12 +7,13 @@ import Logger from "../../Logger";
 import Qualifying from "../../races/Qualifying";
 import Race from "../../races/Race";
 import WeekendObject from "../../races/WeekendObject";
-import BasedOnWeightsGenerator from "../BasedOnWeightsGenerator/BasedOnWeightsGenerator";
+import BasedOnWeightsGeneratorV1 from "../BasedOnWeightsGenerator/BasedOnWeightsGeneratorV1";
 import WithExporter from "../../../interfaces/WithExporter";
 import Exporter from "../../exporter/Exporter";
 import SUPPORTED_CLASSES from "../../races/supportedWeekendObjects";
 import DriverWeightMapPreparator from "./preparators/DriverWeightMapPreparator";
 import TeamWeightMapPreparator from "./preparators/TeamWeightMapPreparator";
+import BasedOnWeightsGenerator from "../BasedOnWeightsGenerator/BasedOnWeightsGenerator";
 
 
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger, WithExporter {
@@ -26,11 +27,13 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
     public logger: Logger;
     public exporter: Exporter;
     public seasonYears: string[];
-    private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGenerator>();
+    private generators: WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGeneratorV1> = new WeakMap<typeof Race | typeof Qualifying, BasedOnWeightsGeneratorV1>();
     private prepared = false;
     private historyData = combinedHistoryData;
+    private weightsGenerator: typeof BasedOnWeightsGenerator;
 
-    constructor(seasonYears: string[]) {
+    constructor(seasonYears: string[], weightsGenerator: typeof BasedOnWeightsGenerator) {
+        this.weightsGenerator = weightsGenerator;
         this.seasonYears = seasonYears;
         this.logger = new Logger('BasedOnWeightedHistoryGenerator')
     }
@@ -76,13 +79,14 @@ export default class BasedOnWeightedHistoryDataGenerator implements FinishGenera
                         :
                         map.weight
 
-                    const normalizedTeamWeight = (teamWeight.weight / teamWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGenerator.NORMALIZE_TO
-                    const normalizedDriverWeight = (map.weight / driverWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGenerator.NORMALIZE_TO
+                    const normalizedTeamWeight = (teamWeight.weight / teamWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGeneratorV1.NORMALIZE_TO
+                    const normalizedDriverWeight = (map.weight / driverWeights.reduce((max, weight) => weight.weight > max ? weight.weight : max, 0)) * BasedOnWeightsGeneratorV1.NORMALIZE_TO
                     map.weight = (normalizedDriverWeight + normalizedTeamWeight) / 2
                 }
             )
 
-            this.generators.set(object, new BasedOnWeightsGenerator(driverWeights))
+            // @ts-ignore
+            this.generators.set(object, new this.weightsGenerator(driverWeights))
         }
 
         if (this.exporter) {
