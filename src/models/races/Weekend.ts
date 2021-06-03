@@ -65,7 +65,7 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
         let score = 0;
         for (let weekendObject of this.weekendObjects) {
             for (let driver of roster.drivers) {
-                let driverScore = await weekendObject.getDriverScore(driver, false);
+                let driverScore = await weekendObject.getScore(driver, false);
 
                 if (roster.isTurboDriver(driver)) {
                     driverScore *= 2;
@@ -75,7 +75,7 @@ export default class Weekend extends HasDrivers implements Simulateable, WithLog
             }
 
             for (let driver of roster.getTeamDrivers(weekendObject.drivers)) {
-                score += await weekendObject.getDriverScore(driver, true);
+                score += await weekendObject.getScore(driver, true);
             }
         }
         return score;

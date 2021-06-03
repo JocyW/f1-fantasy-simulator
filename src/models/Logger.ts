@@ -14,10 +14,12 @@ const LOG_TRANSPORTS_ENUM = {
 }
 
 const LOG_LEVEL = 'info';
-const LOG_TRANSPORTS = [LOG_TRANSPORTS_ENUM.console, LOG_TRANSPORTS_ENUM.file];
+const LOG_TRANSPORTS = [LOG_TRANSPORTS_ENUM.console];
 
 const now = new Date();
-const fileStream = fs.createWriteStream(path.join('./dist', `${now.getDate()}-${now.getMonth()}-${now.getFullYear()}--${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}-debug.log`))
+let fileStream
+if (LOG_TRANSPORTS.includes(LOG_TRANSPORTS_ENUM.file))
+    fileStream = fs.createWriteStream(path.join('./dist', `${now.getDate()}-${now.getMonth()}-${now.getFullYear()}--${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}-debug.log`))
 
 export default class Logger {
     private className: string;

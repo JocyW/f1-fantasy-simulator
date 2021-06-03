@@ -13,7 +13,30 @@ export default abstract class WeekendObject extends HasResults implements Simula
     abstract type: string;
     exporter: Exporter;
 
+    private isTeamMap = new Map<Driver, number>()
+    private driverMap = new Map<Driver, number>()
+
+
     abstract getDriverScore(driver: Driver, isTeam: boolean): Promise<number>
+
+    // Caching for scoring
+    async getScore(driver: Driver, isTeam: boolean): Promise<number> {
+        if (isTeam && this.isTeamMap.get(driver)) {
+            return this.isTeamMap.get(driver);
+        } else if (!isTeam && this.driverMap.get(driver)) {
+            return this.driverMap.get(driver);
+        }
+
+        const score = await this.getDriverScore(driver, isTeam);
+
+        if (isTeam) {
+            this.isTeamMap.set(driver, score)
+        } else {
+            this.isTeamMap.set(driver, score)
+        }
+
+        return score;
+    }
 
     async simulate(generator: FinishGenerator): Promise<Result[]> {
         this.results = await generator.generate(this);

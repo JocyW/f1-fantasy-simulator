@@ -52,7 +52,7 @@ const generateBruteForcedResults = async () => {
         if (score > topScore) {
             topScore = score
         }
-        console.log(`getting score for roster ${i++}`)
+        console.log(`getting score for roster ${i++} of ${rosters.length}`)
     }
 
     for (let roster of rosters) {
@@ -107,4 +107,4 @@ const generateLeagueResults = async () => {
     await jocysLeague.getScore(null);
 
 }
-generateLeagueResults()
+generateBruteForcedResults()
