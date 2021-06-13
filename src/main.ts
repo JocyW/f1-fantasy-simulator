@@ -1,13 +1,13 @@
-import {driversObj, teams} from "./generate";
+import {driversObj, teams} from "./data/fantasy";
 import Roster from "./roster/Roster";
-import Calendar from "./races/Calendar";
+import Calendar from "./race/Calendar";
 import BasedOnWeightedHistoryDataGenerator
-    from "./generators/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
+    from "./generator/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
 import CsvExporter from "./exporter/CsvExporter";
-import HistoricalDNFModifier from "./generators/modifier/HistoricalDNFModifier";
+import HistoricalDNFModifier from "./generator/modifier/HistoricalDNFModifier";
 import bruteForced from '../assets/brute_force.json';
-import BasedOnWeightsGeneratorV2 from "./generators/BasedOnWeightsGenerator/BasedOnWeightsGeneratorV2";
+import BasedOnWeightsGeneratorV2 from "./generator/BasedOnWeightsGenerator/BasedOnWeightsGeneratorV2";
 
 const getCalendar = async () => {
     const numberOfWeekends = 1000;

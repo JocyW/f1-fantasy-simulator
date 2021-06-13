@@ -1,8 +1,8 @@
 import Driver from "./Driver";
 import Team from "./Team";
-import {driversObj, teams} from "../generate";
-import WithLogger from "../WithLogger";
-import Logger from "../Logger";
+import {driversObj, teams} from "../data/fantasy";
+import WithLogger from "../logging/WithLogger";
+import Logger from "../logging/Logger";
 
 export type RosterBackupObject = {
     team: number,

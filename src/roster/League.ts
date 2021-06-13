@@ -1,10 +1,10 @@
-import WithLogger from "../WithLogger";
-import Logger from "../Logger";
+import WithLogger from "../logging/WithLogger";
+import Logger from "../logging/Logger";
 import Roster from "./Roster";
-import Calendar from "../races/Calendar";
-import Scoreable from "../Scoreable";
-import WithExporter from "../WithExporter";
-import Exportable from "../Exportable";
+import Calendar from "../race/Calendar";
+import Scoreable from "../race/interface/Scoreable";
+import WithExporter from "../exporter/interface/WithExporter";
+import Exportable from "../exporter/interface/Exportable";
 import Exporter from "../exporter/Exporter";
 
 export class LeagueEntry {

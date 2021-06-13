@@ -1,8 +1,8 @@
 import Exporter from "./Exporter";
 import fs from 'fs';
 import path from "path";
-import Exportable from "../Exportable";
-import countGenerator from "../countGenerator";
+import Exportable from "./interface/Exportable";
+import countGenerator from "../util/countGenerator";
 
 export default class CsvExporter extends Exporter {
     static DELIMITER = ';';

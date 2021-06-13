@@ -1,4 +1,4 @@
-import HasCost from "../HasCost";
+import HasCost from "./interface/HasCost";
 import Team from "./Team";
 
 export default class Driver extends HasCost {
