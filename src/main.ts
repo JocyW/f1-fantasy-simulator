@@ -1,18 +1,16 @@
 import {driversObj, teams} from "./generate";
-import Roster from "./models/roster/Roster";
-import Calendar from "./models/races/Calendar";
+import Roster from "./roster/Roster";
+import Calendar from "./races/Calendar";
 import BasedOnWeightedHistoryDataGenerator
-    from "./models/generators/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
+    from "./generators/BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
 import {jocysLeague} from "./rosters";
-import CsvExporter from "./models/exporter/CsvExporter";
-import HistoricalDNFModifier from "./models/generators/modifier/HistoricalDNFModifier";
+import CsvExporter from "./exporter/CsvExporter";
+import HistoricalDNFModifier from "./generators/modifier/HistoricalDNFModifier";
 import bruteForced from '../assets/brute_force.json';
-import BasedOnWeightsGeneratorV2 from "./models/generators/BasedOnWeightsGenerator/BasedOnWeightsGeneratorV2";
-
-export const DEBUG_ENABLED = false;
+import BasedOnWeightsGeneratorV2 from "./generators/BasedOnWeightsGenerator/BasedOnWeightsGeneratorV2";
 
 const getCalendar = async () => {
-    const numberOfWeekends = 10;
+    const numberOfWeekends = 1000;
 
     const calendar = new Calendar(numberOfWeekends);
     calendar.exporter = new CsvExporter({
@@ -107,4 +105,4 @@ const generateLeagueResults = async () => {
     await jocysLeague.getScore(null);
 
 }
-generateLeagueResults()
+generateBruteForcedResults()
