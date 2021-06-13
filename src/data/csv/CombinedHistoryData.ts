@@ -7,6 +7,7 @@ import singleton from "../../util/makeSingleton";
 import WeekendObject from "../../race/weekend_object/WeekendObject";
 import Race from "../../race/weekend_object/Race";
 import Qualifying from "../../race/weekend_object/Qualifying";
+
 export class CombinedHistoryData implements WithLogger {
 
     static instance: CombinedHistoryData;

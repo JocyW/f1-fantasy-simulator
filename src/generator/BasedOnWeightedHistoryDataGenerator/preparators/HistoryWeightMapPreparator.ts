@@ -5,7 +5,6 @@ import combinedHistoryData, {CombinedHistoryData} from "../../../data/csv/Combin
 import Qualifying from "../../../race/weekend_object/Qualifying";
 import Race from "../../../race/weekend_object/Race";
 import BasedOnWeightedHistoryDataGenerator from "../BasedOnWeightedHistoryDataGenerator";
-import Result from "../../../race/Result";
 import WithLogger from "../../../logging/WithLogger";
 import Logger from "../../../logging/Logger";
 import Exportable from "../../../exporter/interface/Exportable";
@@ -47,7 +46,7 @@ export default abstract class HistoryWeightMapPreparator implements WeightMapPre
                             weekendObject: new weekendObject().type
                         }
 
-                        if(weight.driver){
+                        if (weight.driver) {
                             tmp = {
                                 ...tmp,
                                 driverId: weight.driver.id,
@@ -57,7 +56,7 @@ export default abstract class HistoryWeightMapPreparator implements WeightMapPre
                             }
                         }
 
-                        if(weight.team){
+                        if (weight.team) {
                             tmp = {
                                 ...tmp,
                                 teamId: weight.team.id,

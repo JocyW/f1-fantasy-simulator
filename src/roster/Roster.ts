@@ -12,6 +12,8 @@ export type RosterBackupObject = {
 
 export default class Roster implements WithLogger {
 
+    logger: Logger;
+
     constructor(props?: { drivers: [Driver, Driver, Driver, Driver, Driver], team: Team, turboDriver: Driver }) {
         this.logger = new Logger('Roster');
         if (props?.drivers?.length)
@@ -21,8 +23,6 @@ export default class Roster implements WithLogger {
         if (props?.turboDriver)
             this.turboDriver = props.turboDriver;
     }
-
-    logger: Logger;
 
     private _drivers: [Driver, Driver, Driver, Driver, Driver];
 
