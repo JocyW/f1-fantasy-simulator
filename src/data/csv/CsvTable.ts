@@ -1,7 +1,8 @@
 import fs from 'fs';
 import csv from 'csv-parser'
-import WithLogger from "../logging/WithLogger";
-import Logger from "../logging/Logger";
+import WithLogger from "../../logging/WithLogger";
+import Logger from "../../logging/Logger";
+
 
 export default abstract class CsvTable<T> implements WithLogger {
     abstract path: string;

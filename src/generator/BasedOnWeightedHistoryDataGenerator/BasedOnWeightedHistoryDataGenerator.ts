@@ -15,7 +15,6 @@ import DriverWeightMapPreparator from "./preparators/DriverWeightMapPreparator";
 import TeamWeightMapPreparator from "./preparators/TeamWeightMapPreparator";
 import BasedOnWeightsGenerator from "../BasedOnWeightsGenerator/BasedOnWeightsGenerator";
 
-
 export default class BasedOnWeightedHistoryDataGenerator implements FinishGenerator, WithLogger, WithExporter {
 
     static baseWeight = 10;

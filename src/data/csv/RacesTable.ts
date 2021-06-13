@@ -1,5 +1,5 @@
 import CsvTable from "./CsvTable";
-import singleton from '../makeSingleton';
+import singleton from '../../util/makeSingleton';
 
 export type RaceData = {
     raceId: string,

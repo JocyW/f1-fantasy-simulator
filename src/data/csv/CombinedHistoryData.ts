@@ -1,14 +1,12 @@
 import races, {RaceData} from "./RacesTable";
 import results, {ResultData} from "./ResultsTable";
 import qualifyingData, {QualifyingData} from "./QualityingsTable";
-import WithLogger from "../logging/WithLogger";
-import Logger from "../logging/Logger";
-import Qualifying from "../races/Qualifying";
-import Race from "../races/Race";
-import WeekendObject from "../races/WeekendObject";
-import singleton from '../makeSingleton';
-import {FinishableData} from "./FinishableData";
-
+import WithLogger from "../../logging/WithLogger";
+import Logger from "../../logging/Logger";
+import singleton from "../../util/makeSingleton";
+import WeekendObject from "../../race/weekend_object/WeekendObject";
+import Race from "../../race/weekend_object/Race";
+import Qualifying from "../../race/weekend_object/Qualifying";
 export class CombinedHistoryData implements WithLogger {
 
     static instance: CombinedHistoryData;
@@ -70,7 +68,7 @@ export class CombinedHistoryData implements WithLogger {
         return this.races.filter((race) => race.year === seasonYear);
     }
 
-    public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData): QualifyingData[]|ResultData[] {
+    public getResultsForWeekendObject(weekendObject: WeekendObject | typeof WeekendObject, race: RaceData): QualifyingData[] | ResultData[] {
         if (weekendObject instanceof Race || weekendObject === Race) {
             this.logger.debug('getting results for race');
             return this.getRaceResultForRace(race);
@@ -87,7 +85,7 @@ export class CombinedHistoryData implements WithLogger {
         if (this.readCsvsAlready) return;
         this.logger.info('Reading CSVs...');
 
-        this._races = (await races.readFile())
+        this._races = await races.readFile()
         this._qualifyingResults = await qualifyingData.readFile();
         this._results = await results.readFile();
 
