@@ -11,7 +11,7 @@ export class ResultsTable extends CsvTable<ResultData> {
     static POSITION_NOT_FINISHED = '\\N';
     static instance: ResultsTable;
     static singleton = makeSingleton(ResultsTable);
-    path: string = 'assets/history/results.data.csv';
+    path: string = 'assets/history/results.csv';
 }
 
 export default ResultsTable.singleton()

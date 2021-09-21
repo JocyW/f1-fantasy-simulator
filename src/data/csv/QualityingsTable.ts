@@ -11,7 +11,7 @@ export interface QualifyingData extends FinishableData {
 export class QualityingsTable extends CsvTable<QualifyingData> {
     static instance: QualityingsTable;
     static singleton = singleton(QualityingsTable);
-    path: string = 'assets/history/qualifying.data.csv';
+    path: string = 'assets/history/qualifying.csv';
 }
 
 export default QualityingsTable.singleton()

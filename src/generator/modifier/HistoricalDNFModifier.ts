@@ -14,6 +14,7 @@ import {ResultsTable} from "../../data/csv/ResultsTable";
 import BasedOnWeightedHistoryDataGenerator
     from "../BasedOnWeightedHistoryDataGenerator/BasedOnWeightedHistoryDataGenerator";
 import combinedHistoryData from "../../data/csv/CombinedHistoryData";
+import Team from "../../roster/Team";
 
 class DnfData {
     racesCount: number = 0
@@ -30,7 +31,7 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
     logger: Logger;
     historyGenerator: BasedOnWeightedHistoryDataGenerator
     prepared = false;
-    dnfProbabilityMapMap: Map<(typeof WeekendObject), Map<Driver, DnfData>> = new Map<typeof WeekendObject, Map<Driver, DnfData>>()
+    dnfProbabilityMapMap: Map<(typeof WeekendObject), Map<Driver | Team, DnfData>> = new Map<typeof WeekendObject, Map<Driver | Team, DnfData>>()
     historyData = combinedHistoryData;
     seasonYears: string[] = [];
 
@@ -39,7 +40,7 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         this.logger = new Logger('HistoricalDNFModifier')
         this.seasonYears = seasonYears;
         for (let object of SUPPORTED_CLASSES) {
-            this.dnfProbabilityMapMap.set(object, new Map<Driver, DnfData>())
+            this.dnfProbabilityMapMap.set(object, new Map<Driver | Team, DnfData>())
         }
     }
 
@@ -47,9 +48,12 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         await this.prepare(weekendObject);
 
         const objectClass = SUPPORTED_CLASSES.find((clazz) => (weekendObject instanceof clazz))
+        const probabilityMap = this.dnfProbabilityMapMap.get(objectClass);
 
         for (let result of results) {
-            if (Math.random() <= this.dnfProbabilityMapMap.get(objectClass).get(result.driver).probability) {
+            const driverProbability = probabilityMap.get(result.driver).probability;
+            const teamProbability = probabilityMap.get(result.driver.team).probability;
+            if (Math.random() <= (driverProbability + teamProbability) / 2) {
                 result.place = Result.PLACE_DNF;
             }
         }
@@ -61,16 +65,19 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
         const res = [];
 
         for (let [weekendObject, map] of this.dnfProbabilityMapMap.entries()) {
-            for (let [driver, data] of map.entries()) {
-                res.push({
-                    driverId: driver.id,
-                    driverFirstName: driver.firstName,
-                    driverLastName: driver.lastName,
-                    driverTeamId: driver.team.id,
-                    racesCount: data.racesCount,
-                    dnfCount: data.dnfCount,
-                    dnfProbability: data.probability
-                })
+            for (let [teamOrDriver, data] of map.entries()) {
+                if (teamOrDriver instanceof Driver) {
+                    res.push({
+                        driverId: teamOrDriver.id,
+                        driverFirstName: teamOrDriver.firstName,
+                        driverLastName: teamOrDriver.lastName,
+                        driverTeamId: teamOrDriver.team.id,
+                        racesCount: data.racesCount,
+                        dnfCount: data.dnfCount,
+                        dnfProbability: data.probability,
+                        teamDnfProbability: map.get(teamOrDriver.team)
+                    })
+                }
             }
         }
 
@@ -94,17 +101,19 @@ export default class HistoricalDNFModifier extends FinishGeneratorModifier imple
                         const driver = Driver.findById(weekendObject.drivers, season2021To2021Mapping[result.driverId]);
 
                         if (driver) {
-                            let data = map.get(driver);
+                            for (let teamOrDriver of [driver, driver.team]) {
+                                let data = map.get(teamOrDriver);
 
-                            if (!data) {
-                                data = new DnfData();
-                                map.set(driver, data);
-                            }
+                                if (!data) {
+                                    data = new DnfData();
+                                    map.set(teamOrDriver, data);
+                                }
 
-                            data.racesCount++
-                            // @ts-ignore
-                            if (ResultsTable.POSITION_NOT_FINISHED === result.position) {
-                                data.dnfCount++;
+                                data.racesCount++
+                                // @ts-ignore
+                                if (ResultsTable.POSITION_NOT_FINISHED === result.position) {
+                                    data.dnfCount++;
+                                }
                             }
                         }
                     }

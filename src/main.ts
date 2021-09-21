@@ -95,8 +95,14 @@ const generateLeagueResults = async () => {
     newTopRoster.team = teams.mercedes;
     newTopRoster.turboDriver = driversObj.norris;
 
+    const topRoster3 = new Roster();
+    topRoster3.drivers = [driversObj.bottas, driversObj.perez, driversObj.norris, driversObj.ocon, driversObj.schumacher];
+    topRoster3.team = teams.redbull;
+    topRoster3.turboDriver = driversObj.perez;
+
     jocysLeague.addEntry('Jocy', topRoster);
     jocysLeague.addEntry('JocyNew', newTopRoster);
+    jocysLeague.addEntry('Jocy3',topRoster3);
     jocysLeague.exporter = new CsvExporter({
         basePath: './dist/exports',
     });
@@ -105,4 +111,4 @@ const generateLeagueResults = async () => {
     await jocysLeague.getScore(null);
 
 }
-generateBruteForcedResults()
+generateLeagueResults()
